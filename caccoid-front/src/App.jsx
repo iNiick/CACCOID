@@ -12,6 +12,7 @@ import theme from './theme';
 import UserHome from './pages/UserHome';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastContainer } from 'react-toastify';
+import AdminHome from './pages/AdminHome';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                   <Route path="/microsoft-auth" element={<MicrosoftAuth />} />
                   <Route path="/email-auth" element={<EmailAuth />} />
                   <Route path="/home" element={<UserHome />} />
+                  <Route path="/admin-home" element={<AdminHome />} />
                 </Routes>
               </div>
             </BrowserRouter>
