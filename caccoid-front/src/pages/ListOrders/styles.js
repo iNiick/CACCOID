@@ -40,6 +40,18 @@ export const TableRow = styled.tr`
   border-bottom: 1px solid var(--lightest-grey);
 `;
 
+export const TableDataCell = styled.td`
+  padding: 10px;
+  font-family: var(--font-regular);
+  font-size: 12px;
+  color: var(--dark-grey);
+  vertical-align: middle;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
 export const TableHeaderCell = styled.th`
   padding: 14px 10px;
   font-family: 'Roboto Condensed', sans-serif;
@@ -47,17 +59,12 @@ export const TableHeaderCell = styled.th`
   color: var(--black);
   font-weight: semibold;
   text-align: left;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
-
 export const TableBody = styled.tbody``;
-
-export const TableDataCell = styled.td`
-  padding: 10px;
-  font-family: var(--font-regular);
-  font-size: 12px;
-  color: var(--dark-grey);
-  vertical-align: middle;
-`;
 
 export const PhotoMini = styled.img`
   width: 35px;

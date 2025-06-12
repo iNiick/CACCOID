@@ -9,7 +9,7 @@ export default function AdminHome() {
     'PENDENTES',
     'AUTORIZADAS',
     'EMITIDAS',
-    'EM PRODUÇÃO',
+    'PRODUÇÃO',
     'ENVIADAS',
     'ENTREGUES',
     'REJEITADAS',
