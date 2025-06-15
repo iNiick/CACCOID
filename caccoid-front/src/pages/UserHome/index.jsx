@@ -9,7 +9,6 @@ import Loading from '../../components/Loading';
 
 export default function UserHome() {
   const navigate = useNavigate();
-  const alertToast = true;
   const { data, loading, error } = useDetailOrder();
 
   if (loading) {
@@ -22,9 +21,7 @@ export default function UserHome() {
         <S.HeaderPage>
           {data?.rejected && (
             <S.ToastArea>
-              {alertToast && (
-                <ToastAlert alertMessage="Sua última solicitação foi indeferida, faça um novo pedido!" />
-              )}
+              <ToastAlert alertMessage="Sua última solicitação foi indeferida, faça um novo pedido!" />
             </S.ToastArea>
           )}
           <S.NewButton
