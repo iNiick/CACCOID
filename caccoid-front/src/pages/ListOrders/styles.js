@@ -87,3 +87,39 @@ export const ButtonIcon = styled.button`
     opacity: 0.8;
   }
 `;
+
+export const CheckBox = styled.input.attrs({ type: 'checkbox' })`
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--white);
+  border: 2px solid var(--light-grey);
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-right: 1.5rem;
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:checked {
+    border-color: var(--dark-blue);
+    background-color: var(--dark-blue);
+  }
+
+  &:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;   
+    bottom: 3px;    
+    width: 6px;
+    height: 12px;
+    border: solid var(--white);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    display: block;
+  }
+`;
+

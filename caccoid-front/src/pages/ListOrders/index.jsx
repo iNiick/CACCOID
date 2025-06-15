@@ -1,12 +1,29 @@
-import { useListOrders } from '../../hooks/useListOrders';
 import * as S from './styles';
 import Loading from '../../components/Loading';
 import openIcon from '../../assets/open-icon.svg';
 import deleteIcon from '../../assets/red-delete-icon.svg';
 
-export const ListOrders = ({ status }) => {
-  const { data, loading, error } = useListOrders({ status });
+export const ListOrders = ({ status, data, loading, error, selectedOrders, setSelectedOrders }) => {
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedOrders(data); 
 
+    } else {
+      setSelectedOrders([]); 
+    }
+  };
+
+  const handleSelectOne = (order) => {
+    if (selectedOrders.some(o => o.matricula === order.matricula)) {
+      setSelectedOrders(selectedOrders.filter(o => o.matricula !== order.matricula));
+
+    } else {
+      setSelectedOrders([...selectedOrders, order]);
+    }
+  };
+
+  const allSelected = data.length > 0 && selectedOrders.length === data.length;
+  
   if (loading) {
     return <Loading />;
   }
@@ -28,7 +45,20 @@ export const ListOrders = ({ status }) => {
       <S.Table>
         <S.TableHeader>
           <S.TableRow>
-            <S.TableHeaderCell></S.TableHeaderCell>
+            {status === 'AUTORIZADAS' ? ( 
+              <S.TableHeaderCell>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <S.CheckBox
+                    checked={allSelected}
+                    onChange={handleSelectAll}
+                  />
+                  <span>Todos</span>
+                </div>
+              </S.TableHeaderCell> 
+              ) : (
+              <S.TableHeaderCell></S.TableHeaderCell>
+            )}
+            <S.TableHeaderCell>Foto</S.TableHeaderCell>
             <S.TableHeaderCell>Nome</S.TableHeaderCell>
             <S.TableHeaderCell>CPF</S.TableHeaderCell>
             <S.TableHeaderCell>Email</S.TableHeaderCell>
@@ -42,6 +72,14 @@ export const ListOrders = ({ status }) => {
           {data?.map((order, index) => (
             <S.TableRow key={index}>
               <S.TableDataCell>
+                {status === 'AUTORIZADAS' && (
+                  <S.CheckBox
+                    checked={selectedOrders.some(o => o.matricula === order.matricula)}
+                    onChange={() => handleSelectOne(order)}
+                  />
+                )}
+              </S.TableDataCell>
+              <S.TableDataCell>
                 <S.PhotoMini src={order.src} alt={order.nome} />
               </S.TableDataCell>
               <S.TableDataCell>{order.nome}</S.TableDataCell>
@@ -53,9 +91,10 @@ export const ListOrders = ({ status }) => {
                 <S.ButtonIcon>
                   <img src={openIcon} />
                 </S.ButtonIcon>
+                {status !== 'AUTORIZADAS' && 
                 <S.ButtonIcon>
                   <img src={deleteIcon} />
-                </S.ButtonIcon>
+                </S.ButtonIcon>}
               </S.TableDataCell>
             </S.TableRow>
           ))}
