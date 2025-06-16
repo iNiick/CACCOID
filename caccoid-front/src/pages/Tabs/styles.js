@@ -16,7 +16,6 @@ export const TabItem = styled.button`
   color: ${(props) => (props.isSelected ? 'var(--white)' : 'var(--dark-grey)')};
   border: none;
   cursor: pointer;
-
   font-size: 20px;
   font-family: 'Bebas Neue', sans-serif;
 
@@ -24,4 +23,26 @@ export const TabItem = styled.button`
     background: var(--dark-blue);
     color: var(--white);
   }
+`;
+
+export const TabItemIconContainer = styled.div`
+  background-color: ${(props) =>
+    props.isSelected ? 'var(--dark-grey)' : 'var(--white)'};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 20px;
+  
+  &:hover {
+    background: var(--dark-blue);
+    color: var(--white);
+  }
+
+`
+
+export const TabItemIcon = styled.img`
+  color: ${(props) => (props.isSelected ? 'var(--white)' : 'var(--dark-grey)')};
+  width: 1.5rem;
+  height: 1.5rem;
 `;
