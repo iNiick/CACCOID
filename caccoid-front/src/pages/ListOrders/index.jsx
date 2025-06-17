@@ -4,6 +4,7 @@ import * as S from './styles';
 import Loading from '../../components/Loading';
 import openIcon from '../../assets/open-icon.svg';
 import deleteIcon from '../../assets/red-delete-icon.svg';
+import { DeletionConfirmationModal } from '../../components/DeletionConfirmationModal';
 
 export const ListOrders = ({
   status,
@@ -14,6 +15,8 @@ export const ListOrders = ({
   setSelectedOrders,
 }) => {
   const [studentIdModal, setStudentIdModal] = useState(null);
+  const [deletionConfirmationModal, setDeletionConfirmationModal] =
+    useState(null);
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
@@ -104,7 +107,9 @@ export const ListOrders = ({
                     <img src={openIcon} />
                   </S.ButtonIcon>
                   {status !== 'AUTORIZADAS' && (
-                    <S.ButtonIcon>
+                    <S.ButtonIcon
+                      onClick={() => setDeletionConfirmationModal(true)}
+                    >
                       <img src={deleteIcon} />
                     </S.ButtonIcon>
                   )}
@@ -119,6 +124,12 @@ export const ListOrders = ({
         <StudentCardDetailsModal
           data={studentIdModal}
           onClose={() => setStudentIdModal(null)}
+        />
+      )}
+
+      {deletionConfirmationModal && (
+        <DeletionConfirmationModal
+          onClose={() => setDeletionConfirmationModal(null)}
         />
       )}
     </>
