@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Wrapper, Label, Input, ErrorMessage } from './styles';
 
 export default function LabeledInput({
   title,
   placeholder,
   type = 'text',
+  value: externalValue,
   onChange,
   confirmPassword = false,
   password = '',
 }) {
-  const [value, setValue] = useState('');
+  const [internalValue, setInternalValue] = useState('');
   const [error, setError] = useState('');
+
+  const value = externalValue !== undefined ? externalValue : internalValue;
 
   const validate = (val) => {
     if (type === 'email') {
@@ -30,7 +33,7 @@ export default function LabeledInput({
 
   const handleChange = (e) => {
     const val = e.target.value;
-    setValue(val);
+    if (externalValue === undefined) setInternalValue(val);
 
     const validationError = validate(val);
     setError(validationError);
