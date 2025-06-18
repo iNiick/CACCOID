@@ -7,14 +7,18 @@ import br.com.cefet.caccoId.infra.security.TokenService;
 import br.com.cefet.caccoId.models.User;
 import br.com.cefet.caccoId.models.enums.UserRole;
 import br.com.cefet.caccoId.repositories.UserRepository;
+import org.aspectj.weaver.bcel.ExceptionRange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class AuthenticationService {
@@ -26,13 +30,15 @@ public class AuthenticationService {
     private UserRepository userRepository;
 
 
-    public String login(AuthenticationDTO data){
+    public Map<String, Object> login(AuthenticationDTO data){
         var userPassword = new UsernamePasswordAuthenticationToken(data.getEmail(), data.getPassword());
         try {
             var auth = this.authenticationManager.authenticate(userPassword);
-            return tokenService.generateToken((User) auth.getPrincipal());
-        }catch (InternalAuthenticationServiceException e){
-            return "";
+            User user = (User) auth.getPrincipal();
+            var token = tokenService.generateToken((user));
+            return Map.of("role", user.getRole().ordinal(), "token", token);
+        }catch (InternalAuthenticationServiceException | BadCredentialsException e){
+            return  Map.of();
         }
     }
 

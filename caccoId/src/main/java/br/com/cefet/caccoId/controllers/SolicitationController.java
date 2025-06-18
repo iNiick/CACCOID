@@ -4,6 +4,8 @@ import br.com.cefet.caccoId.dtos.ApiResponseDTO;
 import br.com.cefet.caccoId.dtos.UpdateStatusDTO;
 import br.com.cefet.caccoId.models.enums.SolicitationStatus;
 import br.com.cefet.caccoId.services.SolicitationService;
+import jakarta.persistence.EntityNotFoundException;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,19 +25,7 @@ public class SolicitationController {
     public ResponseEntity<ApiResponseDTO<?>> GetStatus(){
         try {
             var solicitation = solicitationService.getSolicitation();
-            var requestDate = solicitation.getRequestDate();
-
-            var requestDateFormated = String.format("%02d/%02d/%d",
-                    requestDate.getDayOfMonth(),
-                    requestDate.getMonthValue(),
-                    requestDate.getYear());
-            var body = Map.of(
-                    "studentName", solicitation.getStudent().getName(),
-                    "requestDate", requestDateFormated,
-                    "status", solicitation.getStatus().getStatus(),
-                    "photo", "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(solicitation.getStudentPhoto()),
-                    "rejected", solicitation.getRejected(),
-                    "pendingEdit", solicitation.getPendingEdit());
+            var body = solicitationService.formatSolicitation(solicitation);
             var response = new ApiResponseDTO<>(true, "Dados da solicitação retornados com sucesso.", body);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }catch(NullPointerException e){
@@ -74,6 +64,21 @@ public class SolicitationController {
         }
         catch (Exception e){
             var response = new ApiResponseDTO<>(false, "Falha ao retornar dados da solicitação: " + e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @DeleteMapping("/reject/{id}")
+    public ResponseEntity<ApiResponseDTO<?>> rejectSolicitation(@PathVariable Long id){
+        try {
+            solicitationService.rejectById(id);
+            var response = new ApiResponseDTO<>(true, "Solicitação rejeitada com sucesso.", null);
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException e) {
+            var response = new ApiResponseDTO<>(false, "Solicitação não encontrada.", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            var response = new ApiResponseDTO<>(false, "Erro ao rejeitar solicitação.", null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

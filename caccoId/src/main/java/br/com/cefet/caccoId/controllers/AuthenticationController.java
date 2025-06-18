@@ -7,6 +7,7 @@ import br.com.cefet.caccoId.repositories.UserRepository;
 import br.com.cefet.caccoId.services.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -24,13 +25,15 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponseDTO<Map<String, String>>> login(@Valid @RequestBody AuthenticationDTO data){
-        var token = this.authenticationService.login(data);
-        if(!token.isBlank()){
-            var response = new ApiResponseDTO<>(true, "Usuário válido.", Map.of("token", token));
+    public HttpEntity<ApiResponseDTO<?>> login(@Valid @RequestBody AuthenticationDTO data) {
+        var userData = this.authenticationService.login(data);
+
+        var token = (String) userData.getOrDefault("token", "");
+
+        if (!token.isBlank()) {
+            var response = new ApiResponseDTO<>(true, "Usuário válido.", userData);
             return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
-        else{
+        } else {
             var response = new ApiResponseDTO<>(false, "Não foi possível realizar o login. Verifique seus dados e tente novamente.", Map.of("token", ""));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }

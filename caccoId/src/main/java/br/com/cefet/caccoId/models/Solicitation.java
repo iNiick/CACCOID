@@ -36,6 +36,8 @@ public class Solicitation {
 
     private Boolean rejected;
 
+    private LocalDateTime rejectedAt;
+
     private Boolean pendingEdit;
 
     @OneToOne
