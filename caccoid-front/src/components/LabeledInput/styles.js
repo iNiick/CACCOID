@@ -14,6 +14,7 @@ export const Label = styled.label`
 
 export const Input = styled.input`
   padding: 0.75rem;
+  padding-right: 2.5rem;
   border: 1px solid
     ${({ hasError }) => (hasError ? 'var(--dark-red)' : 'var(--light-grey)')};
   border-radius: 4px;
@@ -35,4 +36,20 @@ export const ErrorMessage = styled.span`
   color: var(--dark-red);
   font-size: 0.875rem;
   margin-top: 0.25rem;
+`;
+
+export const ToggleButton = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+`;
+
+export const ToggleIcon = styled.img`
+  width: 20px;
+  display: block;
 `;

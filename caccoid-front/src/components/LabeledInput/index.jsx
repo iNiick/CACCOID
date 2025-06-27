@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Wrapper, Label, Input, ErrorMessage } from './styles';
+import { Wrapper, Label, Input, ErrorMessage, ToggleButton, ToggleIcon } from './styles';
+import ShowIcon from '../../assets/show.svg'
+import HideIcon from '../../assets/hide.svg'
 
 export default function LabeledInput({
   title,
@@ -12,6 +14,10 @@ export default function LabeledInput({
 }) {
   const [internalValue, setInternalValue] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const isPasswordField = type === 'password';
+  const inputType = isPasswordField ? (showPassword ? 'text' : 'password') : type;
 
   const value = externalValue !== undefined ? externalValue : internalValue;
 
@@ -43,13 +49,27 @@ export default function LabeledInput({
   return (
     <Wrapper>
       <Label>{title}</Label>
-      <Input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-        hasError={!!error}
-      />
+      <div style={{position: 'relative'}}>
+        <Input
+          type={inputType}
+          placeholder={placeholder}
+          value={value}
+          onChange={handleChange}
+          hasError={!!error}
+        />
+        {isPasswordField && (
+            <ToggleButton
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              aria-label={showPassword ? 'Mostrar senha' : 'Ocultar senha'}
+            >
+              <ToggleIcon
+                src={showPassword ? ShowIcon : HideIcon}
+                alt={showPassword ? 'Mostrar senha' : 'Ocultar senha'}
+              />
+            </ToggleButton>
+          )}
+      </div>
       {error && <ErrorMessage>{error}</ErrorMessage>}
     </Wrapper>
   );
