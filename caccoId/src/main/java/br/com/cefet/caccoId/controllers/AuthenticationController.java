@@ -5,6 +5,11 @@ import br.com.cefet.caccoId.dtos.AuthenticationDTO;
 import br.com.cefet.caccoId.dtos.UserRegisterDTO;
 import br.com.cefet.caccoId.repositories.UserRepository;
 import br.com.cefet.caccoId.services.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -20,10 +25,20 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("auth")
+@Tag(name = "Gerenciamento do Autenticação", description = "Endpoints para gerenciar a autenticação")
 public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @Operation(
+            summary = "Login de usuário",
+            description = "Autentica o usuário com e-mail e senha, retornando um token JWT em caso de sucesso. Requisição no formato JSON."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário autenticado com sucesso, token JWT retornado."),
+            @ApiResponse(responseCode = "400", description = "Falha na autenticação. Verifique e-mail e senha."),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor.")
+    })
     @PostMapping("/login")
     public HttpEntity<ApiResponseDTO<?>> login(@Valid @RequestBody AuthenticationDTO data) {
         var userData = this.authenticationService.login(data);
@@ -39,6 +54,15 @@ public class AuthenticationController {
         }
     }
 
+    @Operation(
+            summary = "Registro de novo usuário",
+            description = "Registra um novo usuário no sistema com base nos dados fornecidos. Retorna sucesso ou falha caso o e-mail já esteja em uso."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário registrado com sucesso."),
+            @ApiResponse(responseCode = "400", description = "Já existe um usuário com esse e-mail."),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor.")
+    })
     @PostMapping("/register")
     public ResponseEntity<ApiResponseDTO<Object>> register(@Valid @RequestBody UserRegisterDTO userRegisterDTO){
         try {
@@ -51,6 +75,17 @@ public class AuthenticationController {
         }
     }
 
+    @Operation(
+            summary = "Registro de administrador",
+            description = "Registra um novo administrador no sistema com base nos dados fornecidos. Requer autenticação com perfil ADMIN."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Administrador registrado com sucesso."),
+            @ApiResponse(responseCode = "400", description = "Já existe um usuário com esse e-mail."),
+            @ApiResponse(responseCode = "403", description = "Acesso negado. O usuário autenticado não possui permissão."),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor.")
+    })
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/register-admin")
     public ResponseEntity<ApiResponseDTO<Object>> createAdmin(@Valid @RequestBody UserRegisterDTO userRegisterDTO){
         try {

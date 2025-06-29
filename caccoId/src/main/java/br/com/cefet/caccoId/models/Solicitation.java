@@ -45,17 +45,22 @@ public class Solicitation {
     private Student student;
 
     @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] enrollmentProof;
 
     @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] identityDocumentFront;
 
     @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] identityDocumentBack;
 
     @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] studentPhoto;
 
     @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] paymentProof;
 }
