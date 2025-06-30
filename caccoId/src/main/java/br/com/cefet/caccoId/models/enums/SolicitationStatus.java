@@ -20,4 +20,13 @@ public enum SolicitationStatus {
             case PENDING, AUTHORIZED -> AUTHORIZED;
         };
     }
+
+    public static SolicitationStatus fromString(String status) {
+        for (SolicitationStatus s : values()) {
+            if (s.getStatus().equalsIgnoreCase(status)) {
+                return s;
+            }
+        }
+        throw new IllegalArgumentException("Status inválido: " + status);
+    }
 }

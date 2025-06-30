@@ -2,9 +2,11 @@ package br.com.cefet.caccoId.controllers;
 
 import br.com.cefet.caccoId.dtos.ApiResponseDTO;
 import br.com.cefet.caccoId.dtos.UpdateStatusDTO;
+import br.com.cefet.caccoId.models.Solicitation;
 import br.com.cefet.caccoId.models.enums.SolicitationStatus;
 import br.com.cefet.caccoId.services.SolicitationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,7 +34,7 @@ public class SolicitationController {
 
     @GetMapping()
     @Operation(
-            summary = "Retorna o status da solicitação do usuário",
+            summary = "Retorna a solicitação do usuário",
             description = "Busca os dados da solicitação ativa do usuário autenticado e retorna formatado, se existir. Requer autenticação."
     )
     @SecurityRequirement(name = "bearerAuth")
@@ -169,6 +172,40 @@ public class SolicitationController {
         } catch (Exception e) {
             var response = new ApiResponseDTO<>(false, "Erro ao rejeitar solicitação.", null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @GetMapping("/get/status/{statusReq}")
+    @Operation(
+            summary = "Buscar carteirinhas por status",
+            description = "Retorna uma lista de solicitações (carteirinhas) com o status informado. Requer autenticação com ADMIN."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Carteirinhas retornadas com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Status inválido informado"),
+            @ApiResponse(responseCode = "403", description = "Usuário não autenticado ou sem permissão"),
+            @ApiResponse(responseCode = "500", description = "Erro interno ao buscar carteirinhas")
+    })
+    public ResponseEntity<ApiResponseDTO<?>> getSolicitationsByStatus(
+            @Parameter(description = "Status da solicitação (EM_ANALISE, PENDENTE, AUTORIZADA)", example = "PENDENTE")
+            @PathVariable String statusReq
+    ) {
+        try {
+            SolicitationStatus status = SolicitationStatus.fromString(statusReq);
+            List<Solicitation> solicitations = solicitationService.findSolicitationsByStatus(status);
+            var response = new ApiResponseDTO<>(
+                    true,
+                    String.format("%d carteirinhas com status %s retornadas", solicitations.size(), statusReq),
+                    solicitations
+            );
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            var response = new ApiResponseDTO<>(false, "Status inválido.", null);
+            return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            var response = new ApiResponseDTO<>(false, "Erro interno ao buscar carteirinhas", null);
+            return ResponseEntity.internalServerError().body(response);
         }
     }
 }

@@ -5,6 +5,7 @@ import br.com.cefet.caccoId.models.User;
 import br.com.cefet.caccoId.models.enums.SolicitationStatus;
 import br.com.cefet.caccoId.repositories.SolicitationRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.Null;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -100,4 +102,10 @@ public class SolicitationService {
         solicitation.setRejectedAt(LocalDateTime.now());
         solicitationRepository.save(solicitation);
     }
+
+    public List<Solicitation> findSolicitationsByStatus(SolicitationStatus status){
+        var solicitations = this.solicitationRepository.findByStatus(status);
+        return solicitations;
+    }
+
 }
