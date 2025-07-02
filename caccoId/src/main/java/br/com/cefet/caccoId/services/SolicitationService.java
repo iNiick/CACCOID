@@ -8,6 +8,8 @@ import br.com.cefet.caccoId.repositories.SolicitationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Null;
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,11 +28,18 @@ import java.util.Map;
 public class SolicitationService {
     @Autowired
     private SolicitationRepository solicitationRepository;
+    private static final Logger log = LoggerFactory.getLogger(SolicitationService.class);
 
     public Solicitation getSolicitation(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
-        return solicitationRepository.getSolicitationStatusByLoggedUser(user.getId());
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) auth.getPrincipal();
+            log.info("Retornando dados da solicitação de: {}", user.getUsername());
+            return solicitationRepository.getSolicitationStatusByLoggedUser(user.getId());
+        } catch (Exception e) {
+            log.error("Falha ao retornar dados da solicitação: {}", e.getMessage());
+            return null;
+        }
     }
 
     public Map<String, ?> formatSolicitation(Solicitation solicitation){
@@ -42,6 +51,11 @@ public class SolicitationService {
                 requestDate.getYear());
 
         byte[] photoBytes = solicitation.getStudentPhoto();
+
+        if (photoBytes == null || photoBytes.length == 0) {
+            log.warn("A solicitação com ID {} não possui foto do estudante.", solicitation.getId());
+        }
+
         Tika tika = new Tika();
         String mimeType = tika.detect(photoBytes);
         String base64 = Base64.getEncoder().encodeToString(photoBytes);
@@ -73,6 +87,7 @@ public class SolicitationService {
         if(!(this.finalStatusReached(solicitation.getStatus()))){
             solicitation.setStatus(updatedStatus);
             solicitationRepository.save(solicitation);
+            log.info("Status da solicitação ID {} atualizado com sucesso para '{}'.", solicitation.getId(), updatedStatus.getStatus());
         }
         return solicitation;
     }
@@ -106,6 +121,7 @@ public class SolicitationService {
         solicitation.setRejectedAt(LocalDateTime.now());
         solicitation.setStatus(SolicitationStatus.EXCLUDED);
         solicitationRepository.save(solicitation);
+        log.info("Solicitação com ID {} rejeitada com sucesso. Status definido como '{}'.", id, SolicitationStatus.EXCLUDED.getStatus());
     }
 
     @Transactional
@@ -115,17 +131,21 @@ public class SolicitationService {
 
         solicitation.setStatus(SolicitationStatus.AUTHORIZED);
         solicitationRepository.save(solicitation);
+        log.info("Solicitação com ID {} autorizada com sucesso. Status definido como '{}'.", id, SolicitationStatus.AUTHORIZED.getStatus());
     }
 
     @Transactional
     public void revertAuthorizationById(List<Long> ids) {
+        log.debug("Iniciando reversão de autorização para {} solicitações: {}.", ids.size(), ids);
         for (Long id : ids) {
             Solicitation solicitation = solicitationRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Solicitação " + id + " não encontrada."));
 
             solicitation.setStatus(SolicitationStatus.UNDER_REVIEW);
             solicitationRepository.save(solicitation);
+            log.info("Autorização revertida com sucesso para a solicitação ID {}.", id);
         }
+        log.debug("Reversão de autorizações concluída.");
     }
 
     public List<Map<String, ?>> findSolicitationsByStatus(SolicitationStatus status){
