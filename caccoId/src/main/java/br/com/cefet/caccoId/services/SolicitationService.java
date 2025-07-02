@@ -1,5 +1,6 @@
 package br.com.cefet.caccoId.services;
 
+import br.com.cefet.caccoId.mappers.SolicitationDTOMapper;
 import br.com.cefet.caccoId.models.Solicitation;
 import br.com.cefet.caccoId.models.User;
 import br.com.cefet.caccoId.models.enums.SolicitationStatus;
@@ -11,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +55,7 @@ public class SolicitationService {
     }
 
 
-
+    @Transactional
     public Solicitation updateStatus(Short newStatus){
         SolicitationStatus[] statuses = SolicitationStatus.values();
 
@@ -94,18 +97,48 @@ public class SolicitationService {
         return solicitationStatus == SolicitationStatus.AUTHORIZED;
     }
 
+    @Transactional
     public void rejectById(Long id){
         Solicitation solicitation = solicitationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Solicitação não encontrada."));
 
         solicitation.setRejected(true);
         solicitation.setRejectedAt(LocalDateTime.now());
+        solicitation.setStatus(SolicitationStatus.EXCLUDED);
         solicitationRepository.save(solicitation);
     }
 
-    public List<Solicitation> findSolicitationsByStatus(SolicitationStatus status){
+    @Transactional
+    public void authorizeById(Long id){
+        Solicitation solicitation = solicitationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Solicitação não encontrada."));
+
+        solicitation.setStatus(SolicitationStatus.AUTHORIZED);
+        solicitationRepository.save(solicitation);
+    }
+
+    @Transactional
+    public void revertAuthorizationById(List<Long> ids) {
+        for (Long id : ids) {
+            Solicitation solicitation = solicitationRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Solicitação " + id + " não encontrada."));
+
+            solicitation.setStatus(SolicitationStatus.PENDING);
+            solicitationRepository.save(solicitation);
+        }
+    }
+
+    public List<Map<String, ?>> findSolicitationsByStatus(SolicitationStatus status){
         var solicitations = this.solicitationRepository.findByStatus(status);
-        return solicitations;
+
+        List<Map<String, ?>> formattedSolicitations = new ArrayList<>();
+
+        for (Solicitation solicitation : solicitations) {
+            var formattedSolicitation = SolicitationDTOMapper.toFrontendDto(solicitation);
+            formattedSolicitations.add(formattedSolicitation);
+        }
+
+        return formattedSolicitations;
     }
 
 }
