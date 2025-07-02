@@ -10,13 +10,15 @@ export const AuthProvider = ({ children }) => {
     if (token) setUserName('Aluno');
   }, []);
 
-  const login = (token) => {
+  const login = (token, role) => {
     localStorage.setItem('token', token);
+    localStorage.setItem('role', role);
     setUserName('Aluno');
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
     setUserName(null);
   };
 

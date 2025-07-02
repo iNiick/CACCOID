@@ -36,8 +36,8 @@ export default function EmailAuth() {
         password: loginPassword,
       });
 
-      const token = response.data.result.token;
-      login(token);
+      const result = response.data.result;
+      login(result.token, result.role);
       toast.success('Login realizado com sucesso');
       navigate('/home');
     } catch (error) {

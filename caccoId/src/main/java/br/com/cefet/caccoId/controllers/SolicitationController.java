@@ -175,6 +175,90 @@ public class SolicitationController {
         }
     }
 
+    @Operation(
+            summary = "Autoriza uma solicitação por ID",
+            description = "Autoriza a solicitação informada pelo ID, caso ela exista. Requer autenticação."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Solicitação autorizada com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Solicitação não encontrada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Usuário não autenticado ou sem permissão",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno ao autorizar a solicitação",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponseDTO.class))
+            )
+    })
+    @PutMapping("/authorize/{id}")
+    public ResponseEntity<ApiResponseDTO<?>> authorizeSolicitation(@PathVariable Long id){
+        try {
+            solicitationService.authorizeById(id);
+            var response = new ApiResponseDTO<>(true, "Solicitação autorizada com sucesso.", null);
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException e) {
+            var response = new ApiResponseDTO<>(false, "Solicitação não encontrada.", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            var response = new ApiResponseDTO<>(false, "Erro ao autorizar solicitação.", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @Operation(
+            summary = "Reveter uma autorização de solicitação por ID",
+            description = "Reverte autorização a solicitação informada pelo ID, caso ela exista. Requer autenticação."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Autenticação da solicitação revertida com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Solicitação não encontrada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Usuário não autenticado ou sem permissão",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno ao reverter a autenticação da solicitação",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponseDTO.class))
+            )
+    })
+    @PutMapping("/revert")
+    public ResponseEntity<ApiResponseDTO<?>> revertSolicitationAuthorization(@RequestBody List<Long> solicitationsIds){
+        try {
+            solicitationService.revertAuthorizationById(solicitationsIds);
+            var response = new ApiResponseDTO<>(true, "Autenticação da solicitação revertida com sucesso.", null);
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException e) {
+            var response = new ApiResponseDTO<>(false, "Solicitação não encontrada.", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            var response = new ApiResponseDTO<>(false, "Erro ao reverter autenticação de solicitação.", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
     @GetMapping("/get/status/{statusReq}")
     @Operation(
             summary = "Buscar carteirinhas por status",
@@ -193,7 +277,7 @@ public class SolicitationController {
     ) {
         try {
             SolicitationStatus status = SolicitationStatus.fromString(statusReq);
-            List<Solicitation> solicitations = solicitationService.findSolicitationsByStatus(status);
+            List<Map<String, ?>> solicitations = solicitationService.findSolicitationsByStatus(status);
             var response = new ApiResponseDTO<>(
                     true,
                     String.format("%d carteirinhas com status %s retornadas", solicitations.size(), statusReq),

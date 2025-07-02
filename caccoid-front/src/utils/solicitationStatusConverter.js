@@ -1,15 +1,14 @@
 export const solicitationStatusConverter = (statusCode) => {
-    return statusMap.find(item => item.value == statusCode).label;
+    return statusMap.find(item => item.label == statusCode).value;
 }
 
 const statusMap = [
-    { label: 'SOLICITADAS', value: 1},
-    { label: 'PENDENTES', value: 2 },
-    { label: 'AUTORIZADAS', value: 3 },
-    { label: 'EMITIDAS', value: 4 },
-    { label: 'PRODUÇÃO', value: 5 },
-    { label: 'ENVIADAS', value: 6 },
-    { label: 'ENTREGUES', value: 7 },
-    { label: 'REJEITADAS', value: 8 },
-    { label: 'EXCLUIDAS', value: 9 },
+    { label: 'SOLICITADAS', value: 'EM_ANALISE'},
+    { label: 'PENDENTES', value: 'PENDENTE' },
+    { label: 'AUTORIZADAS', value: 'AUTORIZADA' },
+    { label: 'EMITIDAS', value: 'EMITIDA' },
+    { label: 'PRODUÇÃO', value: 'PRODUCAO' },
+    { label: 'ENVIADAS', value: 'ENVIADA' },
+    { label: 'ENTREGUES', value: 'ENTREGUE' },
+    { label: 'EXCLUIDAS', value: 'EXCLUIDA' }
 ]

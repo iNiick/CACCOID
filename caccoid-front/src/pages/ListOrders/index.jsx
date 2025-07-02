@@ -3,7 +3,9 @@ import StudentCardDetailsModal from '../../components/StudentCardDetailsModal';
 import * as S from './styles';
 import Loading from '../../components/Loading';
 import openIcon from '../../assets/open-icon.svg';
+import userDefault from '../../assets/user-default.jpg';
 import deleteIcon from '../../assets/red-delete-icon.svg';
+import { dateFormatter } from '../../utils/dateFormatter';
 import { DeletionConfirmationModal } from '../../components/DeletionConfirmationModal';
 
 export const ListOrders = ({
@@ -15,8 +17,7 @@ export const ListOrders = ({
   setSelectedOrders,
 }) => {
   const [studentIdModal, setStudentIdModal] = useState(null);
-  const [deletionConfirmationModal, setDeletionConfirmationModal] =
-    useState(null);
+  const [deletionConfirmationModal, setDeletionConfirmationModal] = useState(0);
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
@@ -27,9 +28,9 @@ export const ListOrders = ({
   };
 
   const handleSelectOne = (order) => {
-    if (selectedOrders.some((o) => o.matricula === order.matricula)) {
+    if (selectedOrders.some((o) => o.id === order.id)) {
       setSelectedOrders(
-        selectedOrders.filter((o) => o.matricula !== order.matricula)
+        selectedOrders.filter((o) => o.id !== order.id)
       );
     } else {
       setSelectedOrders([...selectedOrders, order]);
@@ -88,27 +89,27 @@ export const ListOrders = ({
                   {status === 'AUTORIZADAS' && (
                     <S.CheckBox
                       checked={selectedOrders.some(
-                        (o) => o.matricula === order.matricula
+                        (o) => o.id === order.id
                       )}
                       onChange={() => handleSelectOne(order)}
                     />
                   )}
                 </S.TableDataCell>
                 <S.TableDataCell>
-                  <S.PhotoMini src={order.src} alt={order.nome} />
+                  <S.PhotoMini src={order.studentPhoto ?? userDefault}/>
                 </S.TableDataCell>
-                <S.TableDataCell>{order.nome}</S.TableDataCell>
-                <S.TableDataCell>{order.cpf}</S.TableDataCell>
-                <S.TableDataCell>{order.email}</S.TableDataCell>
-                <S.TableDataCell>{order.matricula}</S.TableDataCell>
-                <S.TableDataCell>{order.data}</S.TableDataCell>
+                <S.TableDataCell>{order.student.name}</S.TableDataCell>
+                <S.TableDataCell>{order.student.cpf}</S.TableDataCell>
+                <S.TableDataCell>{order.student.email}</S.TableDataCell>
+                <S.TableDataCell>{order.student.enrollmentNumber}</S.TableDataCell>
+                <S.TableDataCell>{dateFormatter(order.requestDate)}</S.TableDataCell>
                 <S.TableDataCell>
                   <S.ButtonIcon onClick={() => setStudentIdModal(order)}>
                     <img src={openIcon} />
                   </S.ButtonIcon>
                   {status !== 'AUTORIZADAS' && (
                     <S.ButtonIcon
-                      onClick={() => setDeletionConfirmationModal(true)}
+                      onClick={() => setDeletionConfirmationModal(order.id)}
                     >
                       <img src={deleteIcon} />
                     </S.ButtonIcon>
@@ -129,7 +130,8 @@ export const ListOrders = ({
 
       {deletionConfirmationModal && (
         <DeletionConfirmationModal
-          onClose={() => setDeletionConfirmationModal(null)}
+          solicitationId={deletionConfirmationModal}
+          onClose={() => setDeletionConfirmationModal(0)}
         />
       )}
     </>
