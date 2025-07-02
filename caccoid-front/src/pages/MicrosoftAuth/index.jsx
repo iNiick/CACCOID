@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import * as S from './styles';
 import MicrosoftLogo from '../../assets/microsoft-logo.svg';
 import Container from '../../components/Container';
@@ -8,13 +9,19 @@ import { ActionButton } from '../../components/ActionButton';
 
 export default function MicrosoftAuth() {
   const navigate = useNavigate();
+  const { isAuthenticated, role, loading } = useAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/home');
+    if (!loading && isAuthenticated) {
+      if (role === 'User') {
+        navigate('/home', { replace: true });
+      } else if (role === 'Admin') {
+        navigate('/admin-home', { replace: true });
+      }
     }
-  }, [navigate]);
+  }, [isAuthenticated, role, loading, navigate]);
+
+  if (loading) return null;
 
   return (
     <Container variant="centered">

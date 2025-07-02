@@ -13,8 +13,8 @@ export const Overlay = styled.div`
 export const ModalContainer = styled.div`
   background: var(--white);
   border-radius: 8px;
-  width: 70%;
-  height: 73%;
+  width: 65%;
+  height: 65%;
   position: relative;
   padding: 2rem;
   font-family: var(--font-regular);

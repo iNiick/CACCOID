@@ -4,22 +4,25 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
+  width: 100%;
 `;
 
 export const Label = styled.label`
+  width: 100%;
   font-weight: bold;
   margin-bottom: 0.5rem;
   color: var(--dark-grey);
+  display: block;
 `;
 
 export const Input = styled.input`
   padding: 0.75rem;
-  padding-right: 2.5rem;
   border: 1px solid
     ${({ hasError }) => (hasError ? 'var(--dark-red)' : 'var(--light-grey)')};
   border-radius: 4px;
   font-size: 1rem;
   outline: none;
+  width: 100%;
 
   &::placeholder {
     font-family: var(--font-regular);
@@ -52,4 +55,10 @@ export const ToggleButton = styled.button`
 export const ToggleIcon = styled.img`
   width: 20px;
   display: block;
+  opacity: 0.5;
+`;
+
+export const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
 `;

@@ -3,10 +3,11 @@ import { useAuth } from '../contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 
 export function ProtectedRoute({ element, allowedRoles }) {
-  const { isAuthenticated, role } = useAuth();
+  const { isAuthenticated, role, loading } = useAuth();
+
+  if (loading) return null;
 
   if (!isAuthenticated) {
-    toast.error('Você precisa estar logado.');
     return <Navigate to="/microsoft-auth" replace />;
   }
 
@@ -14,6 +15,6 @@ export function ProtectedRoute({ element, allowedRoles }) {
     toast.error('Você não tem permissão para acessar esta página.');
     return <Navigate to="/forbidden" replace />;
   }
-  
+
   return element;
 }
