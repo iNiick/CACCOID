@@ -1,17 +1,19 @@
-import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { toast } from 'react-toastify';
+import { Navigate } from 'react-router-dom';
 
-export const ProtectedRoute = ({ element, allowedRoles }) => {
-  const { user } = useAuth();
+export function ProtectedRoute({ element, allowedRoles }) {
+  const { isAuthenticated, role } = useAuth();
 
-  if (!user?.isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    // Não autenticado: redireciona para login
+    return <Navigate to="/email-auth" replace />;
   }
 
-  if (!allowedRoles.includes(user.role)) {
-    toast.error('Acesso negado. Você não tem permissão para acessar esta página.');
+  if (allowedRoles && !allowedRoles.includes(role)) {
+    // Autenticado, mas sem permissão: redireciona para home
+    return <Navigate to="/home" replace />;
   }
 
+  // Autenticado e autorizado
   return element;
-};
+}

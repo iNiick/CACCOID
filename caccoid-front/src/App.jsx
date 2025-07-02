@@ -13,6 +13,7 @@ import UserHome from './pages/UserHome';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import AdminHome from './pages/AdminHome';
+import { ProtectedRoute } from './guards/ProtectedRoutes';
 
 function App() {
   return (
@@ -31,11 +32,32 @@ function App() {
               <div style={{ paddingTop: '90px', minHeight: '100vh' }}>
                 <Routes>
                   <Route path="/" element={<MicrosoftAuth />} />
-                  <Route path="/form" element={<CardSolicitationForm />} />
                   <Route path="/microsoft-auth" element={<MicrosoftAuth />} />
                   <Route path="/email-auth" element={<EmailAuth />} />
-                  <Route path="/home" element={<UserHome />} />
-                  <Route path="/admin-home" element={<AdminHome />} />
+                  <Route path="/form" element=
+                  {
+                    <ProtectedRoute
+                    element={<CardSolicitationForm/>}
+                    allowedRoles={['User', 'Admin']}
+                    />
+                  }
+                  />
+                  <Route path="/home" element=
+                  {
+                    <ProtectedRoute
+                      element={<UserHome/>}
+                      allowedRoles={['User', 'Admin']}
+                    />
+                  } 
+                  />
+                  <Route path="/admin-home" element=
+                  {
+                    <ProtectedRoute
+                    element={<AdminHome/>}
+                    allowedRoles={['Admin']}
+                    />
+                  } 
+                  />
                 </Routes>
               </div>
             </BrowserRouter>

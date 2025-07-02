@@ -37,7 +37,7 @@ export default function EmailAuth() {
       });
 
       const result = response.data.result;
-      login(result.token, result.role);
+      login(result.token, result.role == 0 ? 'Admin' : 'User');
       toast.success('Login realizado com sucesso');
       navigate('/home');
     } catch (error) {
