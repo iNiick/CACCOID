@@ -37,10 +37,16 @@ export default function EmailAuth() {
       });
 
       const result = response.data.result;
-      console.log(result)
       login(result.token, result.role == 0 ? 'Admin' : 'User');
       toast.success('Login realizado com sucesso');
-      navigate('/home');
+
+      if (result.role === 0) {
+        navigate('/admin-home');
+
+      } else {
+        navigate('/home');
+      }
+
     } catch (error) {
       toast.error(error.response?.data?.message || 'Erro ao fazer login');
     }

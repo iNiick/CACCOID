@@ -7,6 +7,7 @@ import EmailAuth from './pages/EmailAuth';
 import MicrosoftAuth from './pages/MicrosoftAuth';
 import Navbar from './components/Navbar/index';
 import Home from './pages/Home';
+import Forbidden from './pages/Forbidden';
 import { ThemeProvider } from 'styled-components';
 import theme from './theme';
 import UserHome from './pages/UserHome';
@@ -34,11 +35,12 @@ function App() {
                   <Route path="/" element={<MicrosoftAuth />} />
                   <Route path="/microsoft-auth" element={<MicrosoftAuth />} />
                   <Route path="/email-auth" element={<EmailAuth />} />
+                  <Route path="/forbidden" element={<Forbidden />} />
                   <Route path="/form" element=
                   {
                     <ProtectedRoute
                     element={<CardSolicitationForm/>}
-                    allowedRoles={['User', 'Admin']}
+                    allowedRoles={['User']}
                     />
                   }
                   />
@@ -46,7 +48,7 @@ function App() {
                   {
                     <ProtectedRoute
                       element={<UserHome/>}
-                      allowedRoles={['User', 'Admin']}
+                      allowedRoles={['User']}
                     />
                   } 
                   />

@@ -12,8 +12,8 @@ export function ProtectedRoute({ element, allowedRoles }) {
 
   if (allowedRoles && !allowedRoles.includes(role)) {
     toast.error('Você não tem permissão para acessar esta página.');
-    return <Navigate to="/home" replace />;
+    return <Navigate to="/forbidden" replace />;
   }
-
+  
   return element;
 }

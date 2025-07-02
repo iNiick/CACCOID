@@ -123,7 +123,7 @@ public class SolicitationService {
             Solicitation solicitation = solicitationRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Solicitação " + id + " não encontrada."));
 
-            solicitation.setStatus(SolicitationStatus.PENDING);
+            solicitation.setStatus(SolicitationStatus.UNDER_REVIEW);
             solicitationRepository.save(solicitation);
         }
     }

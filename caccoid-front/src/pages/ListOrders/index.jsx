@@ -128,7 +128,7 @@ export const ListOrders = ({
         />
       )}
 
-      {deletionConfirmationModal && (
+      {!!deletionConfirmationModal && (
         <DeletionConfirmationModal
           solicitationId={deletionConfirmationModal}
           onClose={() => setDeletionConfirmationModal(0)}
