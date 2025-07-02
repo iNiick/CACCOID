@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 
@@ -5,15 +6,14 @@ export function ProtectedRoute({ element, allowedRoles }) {
   const { isAuthenticated, role } = useAuth();
 
   if (!isAuthenticated) {
-    // Não autenticado: redireciona para login
+    toast.error('Você precisa estar logado.');
     return <Navigate to="/email-auth" replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(role)) {
-    // Autenticado, mas sem permissão: redireciona para home
+    toast.error('Você não tem permissão para acessar esta página.');
     return <Navigate to="/home" replace />;
   }
 
-  // Autenticado e autorizado
   return element;
 }
