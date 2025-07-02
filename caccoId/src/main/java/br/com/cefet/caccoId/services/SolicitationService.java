@@ -141,6 +141,8 @@ public class SolicitationService {
             Solicitation solicitation = solicitationRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Solicitação " + id + " não encontrada."));
 
+            solicitation.setRejected(false);
+            solicitation.setRejectedAt(null);
             solicitation.setStatus(SolicitationStatus.UNDER_REVIEW);
             solicitationRepository.save(solicitation);
             log.info("Autorização revertida com sucesso para a solicitação ID {}.", id);
