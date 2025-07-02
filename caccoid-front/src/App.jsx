@@ -6,7 +6,6 @@ import { CardSolicitationForm } from './pages/CardSolicitationForm';
 import EmailAuth from './pages/EmailAuth';
 import MicrosoftAuth from './pages/MicrosoftAuth';
 import Navbar from './components/Navbar/index';
-import Home from './pages/Home';
 import Forbidden from './pages/Forbidden';
 import { ThemeProvider } from 'styled-components';
 import theme from './theme';

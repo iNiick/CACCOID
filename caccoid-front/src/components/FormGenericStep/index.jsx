@@ -12,6 +12,12 @@ export const FormGenericStep = ({ fields }) => {
   const formatDateToString = (date) =>
     date ? new Date(date).toISOString().split('T')[0] : '';
 
+  function parseDateFromString(dateStr) {
+    if (!dateStr) return null;
+    const [year, month, day] = dateStr.split('-');
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  }
+
   return (
     <S.FormStep>
       <S.Title>{fields.title}</S.Title>
@@ -30,9 +36,11 @@ export const FormGenericStep = ({ fields }) => {
                   return item.name === 'dateOfBirth' ? (
                     <S.DatePickerContainer>
                       <DatePicker
-                        selected={field.value ? new Date(field.value) : null}
+                        selected={parseDateFromString(field.value)}
                         onChange={(date) =>
-                          field.onChange(formatDateToString(date))
+                          field.onChange(
+                            date ? date.toISOString().split('T')[0] : ''
+                          )
                         }
                         dateFormat="dd/MM/yyyy"
                         showYearDropdown

@@ -7,7 +7,7 @@ export function ProtectedRoute({ element, allowedRoles }) {
 
   if (!isAuthenticated) {
     toast.error('Você precisa estar logado.');
-    return <Navigate to="/email-auth" replace />;
+    return <Navigate to="/microsoft-auth" replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(role)) {
