@@ -65,12 +65,15 @@ export const UserIcon = styled.img`
   object-fit: cover;
 `;
 
+export const DropdownIcon = styled.img`
+  cursor: pointer;
+`;
+
 export const UserName = styled.span`
   font-family: var(--font-accent);
   font-weight: 700;
   font-size: 1.25rem;
   margin-right: 1rem;
-
 `;
 
 export const NavbarLink = styled(Link)`
@@ -108,4 +111,17 @@ export const Button = styled.button`
     opacity: 0.5;
     cursor: not-allowed;
   }
+`;
+
+export const DropdownContainer = styled.div`
+  position: absolute;
+  top: 80px;
+  background: var(--white);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 16px 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  right: 1px;
 `;

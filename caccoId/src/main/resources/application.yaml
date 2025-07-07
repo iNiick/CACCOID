@@ -2,7 +2,7 @@ spring:
   application:
     name: caccoId
   datasource:
-    url: ${DB_URL}
+    url: jdbc:mysql://${DB_HOST}/${DB_DATABASE}?serverTimezone=America/Sao_Paulo
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -23,6 +23,10 @@ spring:
 
 server:
   port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /api-docs
 
 management:
   endpoints:

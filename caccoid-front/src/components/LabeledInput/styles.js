@@ -4,12 +4,15 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
+  width: 100%;
 `;
 
 export const Label = styled.label`
+  width: 100%;
   font-weight: bold;
   margin-bottom: 0.5rem;
   color: var(--dark-grey);
+  display: block;
 `;
 
 export const Input = styled.input`
@@ -19,6 +22,7 @@ export const Input = styled.input`
   border-radius: 4px;
   font-size: 1rem;
   outline: none;
+  width: 100%;
 
   &::placeholder {
     font-family: var(--font-regular);
@@ -35,4 +39,26 @@ export const ErrorMessage = styled.span`
   color: var(--dark-red);
   font-size: 0.875rem;
   margin-top: 0.25rem;
+`;
+
+export const ToggleButton = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+`;
+
+export const ToggleIcon = styled.img`
+  width: 20px;
+  display: block;
+  opacity: 0.5;
+`;
+
+export const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
 `;

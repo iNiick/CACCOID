@@ -1,16 +1,37 @@
-import React, { useState } from 'react';
-import { Wrapper, Label, Input, ErrorMessage } from './styles';
+import { useState } from 'react';
+import {
+  Wrapper,
+  Label,
+  Input,
+  ErrorMessage,
+  ToggleButton,
+  ToggleIcon,
+  InputWrapper,
+} from './styles';
+import ShowIcon from '../../assets/show.svg';
+import HideIcon from '../../assets/hide.svg';
 
 export default function LabeledInput({
   title,
   placeholder,
   type = 'text',
+  value: externalValue,
   onChange,
   confirmPassword = false,
   password = '',
 }) {
-  const [value, setValue] = useState('');
+  const [internalValue, setInternalValue] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const isPasswordField = type === 'password';
+  const inputType = isPasswordField
+    ? showPassword
+      ? 'text'
+      : 'password'
+    : type;
+
+  const value = externalValue !== undefined ? externalValue : internalValue;
 
   const validate = (val) => {
     if (type === 'email') {
@@ -30,7 +51,7 @@ export default function LabeledInput({
 
   const handleChange = (e) => {
     const val = e.target.value;
-    setValue(val);
+    if (externalValue === undefined) setInternalValue(val);
 
     const validationError = validate(val);
     setError(validationError);
@@ -40,13 +61,27 @@ export default function LabeledInput({
   return (
     <Wrapper>
       <Label>{title}</Label>
-      <Input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-        hasError={!!error}
-      />
+      <InputWrapper>
+        <Input
+          type={inputType}
+          placeholder={placeholder}
+          value={value}
+          onChange={handleChange}
+          hasError={!!error}
+        />
+        {isPasswordField && (
+          <ToggleButton
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? 'Mostrar senha' : 'Ocultar senha'}
+          >
+            <ToggleIcon
+              src={showPassword ? ShowIcon : HideIcon}
+              alt={showPassword ? 'Mostrar senha' : 'Ocultar senha'}
+            />
+          </ToggleButton>
+        )}
+      </InputWrapper>
       {error && <ErrorMessage>{error}</ErrorMessage>}
     </Wrapper>
   );

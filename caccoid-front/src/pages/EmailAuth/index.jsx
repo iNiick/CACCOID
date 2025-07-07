@@ -36,10 +36,15 @@ export default function EmailAuth() {
         password: loginPassword,
       });
 
-      const token = response.data.result.token;
-      login(token);
+      const result = response.data.result;
+      login(result.token, result.role == 0 ? 'Admin' : 'User');
       toast.success('Login realizado com sucesso');
-      navigate('/home');
+
+      if (result.role === 0) {
+        navigate('/admin-home');
+      } else {
+        navigate('/home');
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Erro ao fazer login');
     }
@@ -88,7 +93,7 @@ export default function EmailAuth() {
           <UnderlinedTitle color="var(--light-grey)">
             Faça login com seu e-mail pessoal
           </UnderlinedTitle>
-          <form onSubmit={handleLoginSubmit}>
+          <S.form onSubmit={handleLoginSubmit}>
             <LabeledInput
               title="E-mail"
               placeholder="📧 Digite seu e-mail"
@@ -106,14 +111,14 @@ export default function EmailAuth() {
             <ActionButton variant="tertiary" type="submit">
               LOGIN
             </ActionButton>
-          </form>
+          </S.form>
         </Container>
 
         <Container>
           <UnderlinedTitle color="var(--light-grey)">
             Crie uma conta com seu e-mail pessoal
           </UnderlinedTitle>
-          <form onSubmit={handleRegisterSubmit}>
+          <S.form onSubmit={handleRegisterSubmit}>
             <LabeledInput
               title="E-mail"
               placeholder="📧 Digite seu e-mail"
@@ -140,7 +145,7 @@ export default function EmailAuth() {
             <ActionButton variant="tertiary" type="submit">
               REGISTRE-SE
             </ActionButton>
-          </form>
+          </S.form>
         </Container>
       </S.ContainerWrapper>
     </>

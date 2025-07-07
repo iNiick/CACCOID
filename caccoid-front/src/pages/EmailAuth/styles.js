@@ -27,6 +27,10 @@ export const MicrosoftIcon = styled.img`
   align-self: center;
 `;
 
+export const form = styled.form`
+  width: 100%;
+`;
+
 export const StyledDiv = styled.div`
   display: flex;
   align-items: center;
