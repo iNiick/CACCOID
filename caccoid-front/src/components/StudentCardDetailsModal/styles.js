@@ -151,3 +151,42 @@ export const DocumentDiv = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
+export const InputCheckboxWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+export const CheckBox = styled.input.attrs({ type: 'checkbox' })`
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--light-grey);
+  border-radius: 4px;
+  background: var(--white);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+
+  &:checked {
+    background-color: var(--medium-blue);
+    border-color: var(--medium-blue);
+  }
+
+  &:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--white);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  &:hover {
+    border-color: var(--dark-blue);
+  }
+`;
