@@ -15,7 +15,7 @@ export default function AdminHome() {
     'PRODUÇÃO',
     'ENVIADAS',
     'ENTREGUES',
-    'EXCLUIDAS'
+    'EXCLUIDAS',
   ];
 
   const api = useAPI();
@@ -24,15 +24,30 @@ export default function AdminHome() {
   const [selectedOrders, setSelectedOrders] = useState([]);
   const { data, loading, error } = useListOrders({ status: selectedTab });
 
+  const handleSolicitationAuthorization = async (e) => {
+    e.preventDefault();
+    try {
+      for (const order of selectedOrders) {
+        await api.put(`/solicitation/authorize/${order.id}`, {});
+      }
+      toast.success('Solicitações autorizadas com sucesso');
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || 'Erro ao autorizar solicitação'
+      );
+    }
+  };
+
   const handleAuthorizationRevert = async (e) => {
     e.preventDefault();
     try {
-      const selectedOrdersIds = selectedOrders.map(order => order.id);
+      const selectedOrdersIds = selectedOrders.map((order) => order.id);
       const response = await api.put('/solicitation/revert', selectedOrdersIds);
       toast.success(response.data?.message);
-      
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Erro ao reverter solicitações');
+      toast.error(
+        error.response?.data?.message || 'Erro ao reverter solicitações'
+      );
     }
   };
 
@@ -43,7 +58,7 @@ export default function AdminHome() {
         selectedTab={selectedTab}
         setSelectedTab={setSelectedTab}
       />
-      <ListOrders 
+      <ListOrders
         status={selectedTab}
         data={data}
         loading={loading}
@@ -52,11 +67,31 @@ export default function AdminHome() {
         setSelectedOrders={setSelectedOrders}
       />
       <S.RightAlign>
-        {selectedTab === 'AUTORIZADAS' && <S.AuthTabButton onClick={handleAuthorizationRevert}>Reverter</S.AuthTabButton>}
-        {selectedTab === 'AUTORIZADAS' && <S.AuthTabButton onClick={() => console.log(selectedOrders)} isEmitButton={true}>Enviar Virtual</S.AuthTabButton>}
-        {selectedTab === 'EXCLUIDAS' && <p>Todas as carteirinhas na lixeira são excluídas em 1 semana</p>}
+        {selectedTab === 'SOLICITADAS' && (
+          <S.AuthTabButton
+            onClick={handleSolicitationAuthorization}
+            isEmitButton={true}
+          >
+            Autorizar
+          </S.AuthTabButton>
+        )}
+        {(selectedTab === 'AUTORIZADAS' || selectedTab === 'PENDENTES') && (
+          <S.AuthTabButton onClick={handleAuthorizationRevert}>
+            Reverter
+          </S.AuthTabButton>
+        )}
+        {selectedTab === 'AUTORIZADAS' && (
+          <S.AuthTabButton
+            onClick={() => console.log(selectedOrders)}
+            isEmitButton={true}
+          >
+            Enviar Virtual
+          </S.AuthTabButton>
+        )}
+        {selectedTab === 'EXCLUIDAS' && (
+          <p>Todas as carteirinhas na lixeira são excluídas em 1 semana</p>
+        )}
       </S.RightAlign>
-
     </S.Container>
   );
 }
