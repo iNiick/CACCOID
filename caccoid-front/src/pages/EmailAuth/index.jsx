@@ -26,7 +26,7 @@ export default function EmailAuth() {
     if (token) {
       navigate('/home');
     }
-  }, []);
+  }, [navigate]);
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -61,6 +61,9 @@ export default function EmailAuth() {
       });
 
       toast.success('Cadastro realizado com sucesso');
+      setRegisterEmail('');
+      setRegisterPassword('');
+      setConfirmPassword('');
     } catch (error) {
       if (error.response?.status === 409) {
         toast.error(error.response?.data?.message);
@@ -85,6 +88,17 @@ export default function EmailAuth() {
               FAÇA LOGIN COM CONTA MICROSOFT
             </ActionButton>
           </S.StyledDiv>
+        </Container>
+      </S.BlueContainerDiv>
+
+      <S.BlueContainerDiv>
+        <Container variant="blueRow">
+          <S.StyledH3>
+            Seus dados pessoais são armazenados de forma segura, com
+            criptografia, em conformidade com a Lei Geral de Proteção de Dados
+            (LGPD). Informamos que nenhuma informação é compartilhada com
+            terceiros.
+          </S.StyledH3>
         </Container>
       </S.BlueContainerDiv>
 

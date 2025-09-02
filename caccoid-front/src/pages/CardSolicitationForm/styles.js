@@ -4,7 +4,7 @@ export const FormWindow = styled.div`
   justify-content: center;
   background-color: white;
   border-radius: 20px;
-  margin: 6rem 0 4rem 0;
+  margin: 1rem 0 1rem 0;
   padding: 2rem;
   box-sizing: border-box;
   display: flex;
@@ -17,7 +17,7 @@ export const FormNavigationContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: ${({ firstPage }) =>
-    firstPage ? 'right' : 'space-between' };
+    firstPage ? 'right' : 'space-between'};
 `
 export const FormButton = styled.button`
   background-color: ${({ prevButton }) =>

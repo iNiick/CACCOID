@@ -87,7 +87,15 @@ const StudentCardDetailsModal = ({ data, onClose, status, onDelete }) => {
       <S.ModalContainer>
         <S.CloseButton onClick={onClose}>×</S.CloseButton>
         <S.ModalContent>
-          <S.Photo src={formData.studentPhoto} alt={formData.nome} />
+          <S.InputCheckboxWrapper>
+            {isEditing && (
+              <S.CheckBox
+                checked={!!changeRequests.studentPhoto}
+                onChange={() => handleCheckboxChange('studentPhoto')}
+              />
+            )}
+            <S.Photo src={formData.studentPhoto} alt={formData.nome} />
+          </S.InputCheckboxWrapper>
           <S.RightContent>
             <S.Tabs>
               <S.Tab
@@ -230,10 +238,8 @@ const StudentCardDetailsModal = ({ data, onClose, status, onDelete }) => {
                     <S.OpenButtonIcon>
                       <a
                         href={formData[docField]}
-                        download={`${docField}.${formData[docField].substring(
-                          formData[docField].indexOf('/') + 1,
-                          formData[docField].indexOf(';')
-                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <img src={openIcon} style={{ cursor: 'pointer' }} />
                       </a>
