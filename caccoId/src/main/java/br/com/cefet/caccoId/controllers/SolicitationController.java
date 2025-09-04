@@ -292,4 +292,24 @@ public class SolicitationController {
             return ResponseEntity.internalServerError().body(response);
         }
     }
+
+
+    @Operation(
+            summary = "Exigir correção de um dado da solicitação ao aluno",
+            description = "Recebe do cliente quais documentos foram solicitados para serem revisados pelo usuário. Requer autenticação."
+    )
+    @SecurityRequirement(name="bearerAuth")
+    @ApiResponses(value ={
+            @ApiResponse(responseCode = "200", description = "Pedido de revisão enviado com sucesso!"),
+            @ApiResponse(responseCode = "400", description = "Formato de requisição HTTP inválido!"),
+            @ApiResponse(responseCode = "403", description = "Usuário não autenticado ou sem permissão"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor. ")
+    })
+    @PostMapping("/reviewDocuments/{solicitationID}")
+    public ResponseEntity<ApiResponseDTO<?>> markDocumentsForReview(
+            @PathVariable("solicitationId") Long solicitationID,
+            @RequestBody @Valid ReviewDocumentsDTO reviewDocumentsDTO
+
+    )
+
 }
