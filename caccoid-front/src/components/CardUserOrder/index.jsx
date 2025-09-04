@@ -12,7 +12,6 @@ export const CardUserOrder = ({
   srcImg,
   isEditAvailable = false,
 }) => {
-
   const getLabel = (status) => {
     switch (status) {
       case 'PENDENTE':
@@ -29,7 +28,7 @@ export const CardUserOrder = ({
   return (
     <S.CardContainer className={className}>
       <S.Content>
-        <S.Image src={srcImg ?? userDefault} alt="" sizes="24px" />
+        <S.Image src={srcImg ?? userDefault} alt="" />
         <S.InfoContainer>
           <S.InfoText>{title}</S.InfoText>
           <S.InfoItem>

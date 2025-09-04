@@ -18,9 +18,7 @@ export const CardContainer = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   background-color: var(--white);
-  padding: 25px 50px;
-  width: 100%;
-
+  padding: 20px 50px;
   width: 80%;
   min-width: 800px;
   height: 200px;
@@ -29,13 +27,17 @@ export const CardContainer = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 40px;
 `;
 
 export const Image = styled.img`
-  height: 150px;
-  width: 100px;
+  width: 100%;
+  max-width: 120px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 3px;
 `;
+
 
 export const InfoContainer = styled.div`
   display: flex;
