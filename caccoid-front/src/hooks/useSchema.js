@@ -41,7 +41,7 @@ export const useSchema = () => {
         name: yup
           .string()
           .required('Nome completo é obrigatório')
-          .min(3, 'Mínimo 3 caracteres'),
+          .min(5, 'Nome incompleto'),
         cpf: yup
           .string()
           .required('CPF é obrigatório')
@@ -56,12 +56,19 @@ export const useSchema = () => {
         dateOfBirth: yup
           .string()
           .required('Data de nascimento é obrigatória')
-          .test('valid-date', 'Data inválida', (value) => {
-            return !isNaN(new Date(value).getTime());
-          })
-          .test('future-date', 'Data não pode ser no futuro', (value) => {
-            return new Date(value) <= new Date();
+          .test('valid-date', 'Data inválida', (value) => !isNaN(new Date(value).getTime()))
+          .test('future-date', 'Data não pode ser no futuro', (value) => new Date(value) <= new Date())
+          .test('minimum-age', 'Data de nascimento muito recente', (value) => {
+            if (!value) return false;
+            const today = new Date();
+            const birthDate = new Date(value);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            const dayDiff = today.getDate() - birthDate.getDate();
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) age--;
+            return age >= 14;
           }),
+
         email: yup
           .string()
           .email('E-mail inválido')

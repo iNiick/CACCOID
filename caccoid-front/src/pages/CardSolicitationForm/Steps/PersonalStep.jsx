@@ -1,4 +1,4 @@
-import { FormGenericStep } from "../../../components/FormGenericStep";
+import { FormGenericStep } from '../../../components/FormGenericStep';
 
 export const PersonalStep = () => {
   const fields = {
@@ -9,22 +9,22 @@ export const PersonalStep = () => {
         label: 'Nome Completo',
         placeholder: 'Digite seu nome completo',
       },
-      { 
-        name: 'rg', 
-        label: 'RG', 
-        type: 'rg', 
-        placeholder: '00.000.000-0' 
+      {
+        name: 'rg',
+        label: 'RG',
+        type: 'rg',
+        placeholder: '00.000.000-0',
       },
-      { 
-        name: 'cpf', 
-        label: 'CPF', 
-        type: 'cpf', 
-        placeholder: '000.000.000-00' 
+      {
+        name: 'cpf',
+        label: 'CPF',
+        type: 'cpf',
+        placeholder: '000.000.000-00',
       },
-      { 
-        name: 'dateOfBirth', 
-        label: 'Data de nascimento', 
-        type: 'date' 
+      {
+        name: 'dateOfBirth',
+        label: 'Data de nascimento',
+        type: 'date',
       },
     ],
     column2: [
@@ -36,7 +36,7 @@ export const PersonalStep = () => {
       },
       {
         name: 'telephone',
-        label: 'Celular',
+        label: 'Celular (WhatsApp)',
         type: 'phone',
         placeholder: '(00) 00000-0000',
       },
@@ -44,7 +44,5 @@ export const PersonalStep = () => {
     uploadField: [],
   };
 
-  return (
-    <FormGenericStep fields={fields}/>
-  );
+  return <FormGenericStep fields={fields} />;
 };

@@ -57,7 +57,9 @@ export const ListOrders = ({
         <S.Table>
           <S.TableHeader>
             <S.TableRow>
-              {status === 'AUTORIZADAS' ? (
+              {status === 'EMITIDAS' || status === 'ENTREGUES' ? (
+                <S.TableHeaderCell />
+              ) : (
                 <S.TableHeaderCell>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <S.CheckBox
@@ -67,8 +69,6 @@ export const ListOrders = ({
                     <span>Todos</span>
                   </div>
                 </S.TableHeaderCell>
-              ) : (
-                <S.TableHeaderCell />
               )}
               <S.TableHeaderCell>Foto</S.TableHeaderCell>
               <S.TableHeaderCell>Nome</S.TableHeaderCell>
@@ -84,11 +84,15 @@ export const ListOrders = ({
             {data?.map((order, index) => (
               <S.TableRow key={index}>
                 <S.TableDataCell>
-                  {status === 'AUTORIZADAS' && (
-                    <S.CheckBox
-                      checked={selectedOrders.some((o) => o.id === order.id)}
-                      onChange={() => handleSelectOne(order)}
-                    />
+                  {status === 'EMITIDAS' || status === 'ENTREGUES' ? (
+                    <S.TableHeaderCell />
+                  ) : (
+                    <S.TableHeaderCell>
+                      <S.CheckBox
+                        checked={selectedOrders.some((o) => o.id === order.id)}
+                        onChange={() => handleSelectOne(order)}
+                      />
+                    </S.TableHeaderCell>
                   )}
                 </S.TableDataCell>
                 <S.TableDataCell>

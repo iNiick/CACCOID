@@ -167,29 +167,21 @@ export const UploadInput = styled.input`
   width: 100%;
 `
 
-
-/*   
-.image-crop-container {
-  margin-top: 20px;
-  border: 2px dashed #ccc;
-  padding: 20px;
-  text-align: center;
-}
-
-.crop-area {
-  width: 300px;
-  height: 300px;
+export const CropperWrapper = styled.div`
+  width: 100%;
+  max-width: 30px;
+  aspect-ratio: 3 / 4;
+  border-radius: 8px;
+  overflow: hidden;
   margin: 0 auto;
-  background-color: #f5f5f5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-} */
+`;
 
-// button:disabled {
-//   opacity: 0.6;
-//   cursor: not-allowed;
-// }
+export const Button = styled.div`
+  position: absolute;
+  bottom: 30px;
+  z-index: 10;
+`;
+
 
 
 
