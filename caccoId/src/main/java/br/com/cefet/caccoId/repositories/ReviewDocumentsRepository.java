@@ -10,6 +10,9 @@ import java.util.List;
 public interface ReviewDocumentsRepository extends JpaRepository<ReviewDocuments, Long> {
 
     List<ReviewDocuments> findBySolicitationId(Long solicitationId);
-
+    boolean existsBySolicitationIdAndFieldNameIgnoreCaseAndConsumedFalse(
+            Long solicitationId,
+            String fieldName
+    );
 
 }

@@ -25,6 +25,7 @@ public void markForReview(Long solicitationId, List<String> fieldNames) {
         throw new IllegalArgumentException("A lista de campos não pode estar vazia.");
     }
 
+
     var solicitation = solicitationRepository.findById(solicitationId)
             .orElseThrow(() -> new EntityNotFoundException("Solicitação não encontrada."));
     Long studentId = solicitationId;
@@ -39,6 +40,11 @@ public void markForReview(Long solicitationId, List<String> fieldNames) {
         }
         if (!isValidField) {
             throw new IllegalArgumentException("Campo inválido para revisão: " + fieldName);
+        }
+        boolean jaExiste = reviewDocumentsRepository
+                .existsBySolicitationIdAndFieldNameIgnoreCaseAndConsumedFalse(solicitationId, fieldName);
+        if (jaExiste) {
+            throw new IllegalArgumentException("Já existe uma solicitação de revisão pendente para o campo: " + fieldName);
         }
         ReviewDocuments document = ReviewDocuments.builder()
                 .solicitationId(solicitationId)
