@@ -70,14 +70,20 @@ public class SolicitationService {
 
 
     @Transactional
-    public Solicitation updateStatus(Short newStatus){
+    public Solicitation updateStatus(Short newStatus, Long solicitationId){
+
         SolicitationStatus[] statuses = SolicitationStatus.values();
 
         if (newStatus < 0 || newStatus >= statuses.length) {
             throw new IllegalArgumentException("Status inválido.");
         }
+        Solicitation solicitation = null;
 
-        var solicitation = this.getSolicitation();
+        if(solicitationId != null){
+            solicitation = this.getSolicitationById(solicitationId); // Corrigido: busca pelo ID
+        } else {
+            solicitation = this.getSolicitation(); // Mantém busca pelo usuário logado se ID for nulo
+        }
         SolicitationStatus updatedStatus = statuses[newStatus];
 
         if (solicitation.getStatus().equals(updatedStatus)) {
@@ -163,4 +169,8 @@ public class SolicitationService {
         return formattedSolicitations;
     }
 
+    public Solicitation getSolicitationById(Long id) {
+        return solicitationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Solicitação não encontrada."));
+    }
 }

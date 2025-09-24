@@ -38,4 +38,5 @@ public interface SolicitationRepository extends JpaRepository<Solicitation, Long
     List<Long> findStudentIdsFromOldRejectedSolicitations();
 
     List<Solicitation> findByStatus(SolicitationStatus status);
+
 }
