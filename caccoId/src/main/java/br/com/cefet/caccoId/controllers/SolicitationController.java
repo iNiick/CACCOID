@@ -106,7 +106,7 @@ public class SolicitationController {
     @PostMapping("/update")
     public ResponseEntity<ApiResponseDTO<?>> updateSolicitationStatus(@RequestBody UpdateStatusDTO updateStatusDTO){
         try {
-            var solicitation = solicitationService.updateStatus(updateStatusDTO.getNewStatus());
+            var solicitation = solicitationService.updateStatus(updateStatusDTO.getNewStatus(), null);
             ApiResponseDTO<Map<String, Integer>> response;
             if (!(solicitationService.finalStatusReached(solicitation.getStatus()))) {
                 response = new ApiResponseDTO<>(

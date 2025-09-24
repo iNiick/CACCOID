@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import br.com.cefet.caccoId.services.SolicitationService;
 
 @RestController
 @RequestMapping("/reviewDocuments")
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewDocumentsController {
     @Autowired
     private ReviewDocumentsService reviewDocumentsService;
+    @Autowired
+    private SolicitationService solicitationService;
 
 
     @PostMapping("/markDocumentsForReview/{solicitationID}")
@@ -42,9 +45,11 @@ public class ReviewDocumentsController {
     public ResponseEntity<ApiResponseDTO<?>> markDocumentsForReview(
             @PathVariable Long solicitationID,
             @Valid @RequestBody ReviewDocumentsDTO reviewDocumentsDTO) {
-
+            var solicitation = solicitationService.getSolicitationById(solicitationID);
         try {
             reviewDocumentsService.markForReview(solicitationID, reviewDocumentsDTO.getFieldNames());
+            short statusCode = 1; // Status "PENDENTE"
+            solicitationService.updateStatus(statusCode, solicitationID); // Corrigido: passa o ID, não o objeto
             return ResponseEntity.ok(new ApiResponseDTO<>(true, "Pedido de revisão enviado com sucesso!", null));
 
         } catch (EntityNotFoundException e) {
