@@ -14,7 +14,6 @@ public class EmailService {
     private String from;
 
     public String sendEmail(String to, String subject, String message) {
-        // Implement email sending logic here using javaMailSender
         try{
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setFrom(from);
