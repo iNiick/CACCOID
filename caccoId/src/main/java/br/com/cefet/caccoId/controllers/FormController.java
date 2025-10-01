@@ -4,6 +4,7 @@ package br.com.cefet.caccoId.controllers;
 import br.com.cefet.caccoId.dtos.ApiResponseDTO;
 import br.com.cefet.caccoId.dtos.FormRequestDTO;
 import br.com.cefet.caccoId.services.FormService;
+import br.com.cefet.caccoId.services.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,6 +27,9 @@ import org.springframework.web.bind.annotation.*;
 public class FormController {
     @Autowired
     private FormService formService;
+    
+    @Autowired
+    private EmailService emailService;
 
     @Operation(
             summary = "Registra um novo estudante",
@@ -55,6 +59,9 @@ public class FormController {
         try {
             formService.registerStudent(formRequestDTO);
             var response = new ApiResponseDTO<>(true, "Estudante registrado com sucesso!", null);
+            System.out.println("Enviando email para " + formRequestDTO.getStudent().getEmail());
+            String email = formRequestDTO.getStudent().getEmail();
+            emailService.sendEmail(email, "Registro no CaccoID", "Seu registro foi realizado com sucesso!");
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException | DataIntegrityViolationException e) {
             var response = new ApiResponseDTO<>(false, e.getMessage(),null);
