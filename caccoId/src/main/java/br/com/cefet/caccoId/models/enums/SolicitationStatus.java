@@ -4,10 +4,18 @@ import lombok.Getter;
 
 @Getter
 public enum SolicitationStatus {
+    /*
+    IN_PRODUCTION("Em producao"),
+    SENT("Enviada"),
+    DELIVERED("Entregue"),
+  */
+
     UNDER_REVIEW("EM_ANALISE"),
     PENDING("PENDENTE"),
     AUTHORIZED("AUTORIZADA"),
+    ISSUED("EMITIDA"),
     EXCLUDED("EXCLUIDA");
+
 
     private final String status;
 
