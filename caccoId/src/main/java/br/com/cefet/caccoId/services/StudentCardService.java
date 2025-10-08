@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import br.com.cefet.caccoId.repositories.SolicitationRepository;
+import br.com.cefet.caccoId.models.enums.SolicitationStatus;
 
 @Service
 public class StudentCardService {
@@ -44,10 +45,11 @@ public class StudentCardService {
         // Busca todas as carteirinhas do estudante
         List<StudentCard> cards = studentCardRepository.findAllByStudentId(studentId);
 
-        // Desativa carteirinhas expiradas
+        // Desativa carteirinhas expiradas -- CONFERIR O ENUM SolicitationStatus
 
-         var statusCode = (short)2;
-        boolean exists = solicitationRepository.existsByStudentIdAndStatus(studentId, statusCode); // por exemplo, status 2
+        Short statusCode = (short) SolicitationStatus.fromString("AUTORIZADA").getCode();
+        SolicitationStatus status = SolicitationStatus.fromCode(statusCode);
+        boolean exists = solicitationRepository.existsByStudentIdAndStatus(studentId, status); // por exemplo, status 2
         boolean hasActive = false;
         if (exists) {
             statusCode = 1;
@@ -90,5 +92,9 @@ public class StudentCardService {
         statusCode = (short) 3; // Status "EMITIDA"
         solicitationService.updateStatus(statusCode,studentId);
         return StudentCardMapper.toDTO(saved);
+    }
+    public StudentCard getStudentCardById(Long id) {
+        return studentCardRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Carteirinha não encontrada"));
     }
 }
