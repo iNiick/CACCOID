@@ -1,12 +1,31 @@
+# Build stage
+FROM node:18-alpine AS build
+
+WORKDIR /app
+
+# Copiar package.json e package-lock.json
+COPY package*.json ./
+RUN npm install
+
+# Copiar todo o código
+COPY . .
+
+# Build do frontend
+RUN npm run build
+
+# Production stage
 FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+# Instalar serve para servir os arquivos estáticos
+RUN npm install -g serve
 
-COPY . .
+# Copiar build final
+COPY --from=build /app/dist ./dist
 
+# Expor porta padrão do Render
 EXPOSE 5173
 
-CMD ["npm", "run", "dev", "--", "--host"]
+# Rodar servidor de produção
+CMD ["serve", "-s", "dist", "-l", "5173"]
