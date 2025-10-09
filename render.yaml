@@ -5,11 +5,11 @@ services:
     dockerfilePath: caccoId/Dockerfile
     branch: main
     plan: free
-    region: us-east-1
+    region: virginia-free
     autoDeploy: true
     envVars:
       - key: JAVA_OPTS
-        value: "-Xmx512m" # ajuste memória se precisar
+        value: "-Xmx512m"
     buildCommand: ""
     startCommand: ""
 
@@ -19,10 +19,10 @@ services:
     dockerfilePath: caccoid-front/Dockerfile
     branch: main
     plan: free
-    region: us-east-1
+    region: virginia-free
     autoDeploy: true
     envVars:
       - key: VITE_API_URL
-        value: "https://caccoid-backend.onrender.com" # URL do backend no Render
+        value: "https://caccoid-backend.onrender.com"
     buildCommand: ""
     startCommand: ""
