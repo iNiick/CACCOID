@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const useAPI = (hasFile) => {
   const api = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: process.env.REACT_APP_API_BASE_URL ||'http://localhost:8080',
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': hasFile ? 'multipart/form-data' : 'application/json',
