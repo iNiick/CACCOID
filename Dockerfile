@@ -1,8 +1,8 @@
 FROM node:18
 WORKDIR /app
 
-COPY backend ./backend
-COPY frontend ./frontend
+COPY backend ./caccoId
+COPY frontend ./caccoid-front
 COPY start.sh .
 RUN chmod +x start.sh
 
