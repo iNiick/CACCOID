@@ -12,7 +12,9 @@ COPY caccoid-front/. .
 
 # Build do frontend
 RUN npm run build
-
+#Criar e definir a variável de ambiente
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 # Production stage
 FROM node:18-alpine
 
