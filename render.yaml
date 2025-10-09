@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: caccoid-backend
+    env: docker
+    dockerfilePath: caccoId/Dockerfile
+    branch: main
+    plan: free
+    region: us-east-1
+    autoDeploy: true
+    envVars:
+      - key: JAVA_OPTS
+        value: "-Xmx512m" # ajuste memória se precisar
+    buildCommand: ""
+    startCommand: ""
+    ports:
+      - 8080
+
+  - type: web
+    name: caccoid-frontend
+    env: docker
+    dockerfilePath: caccoid-front/Dockerfile
+    branch: main
+    plan: free
+    region: us-east-1
+    autoDeploy: true
+    envVars:
+      - key: VITE_API_URL
+        value: "https://caccoid-backend.onrender.com" # URL do backend no Render
+    buildCommand: ""
+    startCommand: ""
+    ports:
+      - 5173
