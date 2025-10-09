@@ -4,11 +4,11 @@ FROM node:18-alpine AS build
 WORKDIR /app
 
 # Copiar package.json e package-lock.json
-COPY package*.json ./
+COPY caccoid-front/package*.json ./
 RUN npm install
 
 # Copiar todo o código
-COPY . .
+COPY caccoid-front/. .
 
 # Build do frontend
 RUN npm run build
