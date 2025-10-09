@@ -3,10 +3,10 @@ FROM maven:3.9.9-eclipse-temurin-23 AS build
 
 WORKDIR /app
 
-COPY pom.xml ./
+COPY caccoId/pom.xml ./
 RUN mvn dependency:go-offline
 
-COPY src ./src
+COPY caccoId/src ./src
 
 RUN mvn clean package -DskipTests
 
