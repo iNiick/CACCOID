@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const useAPI = (hasFile) => {
   const api = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL ||'http://localhost:8080',
+    baseURL: import.meta.env.VITE_API_BASE_URL,
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': hasFile ? 'multipart/form-data' : 'application/json',
