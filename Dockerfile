@@ -11,6 +11,5 @@ RUN cd backend && npm install
 RUN cd frontend && npm install
 
 EXPOSE 8080
-EXPOSE 5173
 
 CMD ["./start.sh"]
