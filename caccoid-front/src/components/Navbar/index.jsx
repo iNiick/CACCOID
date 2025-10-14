@@ -21,7 +21,7 @@ const Navbar = () => {
       logout();
       setIsDropdownOpen(false);
       toast.success('Logout realizado com sucesso');
-      navigate('/microsoft-auth');
+      navigate('/email-auth');
     } catch (error) {
       toast.error(error.message || 'Erro ao realizar logout');
     }

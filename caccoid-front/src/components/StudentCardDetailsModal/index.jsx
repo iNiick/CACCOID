@@ -168,6 +168,11 @@ const StudentCardDetailsModal = ({ data, onClose, status, onDelete }) => {
                     formData.student.telephone,
                     'telefone'
                   )}
+                  {renderInputWithCheckbox(
+                    'Id do Estudante',
+                    formData.student.id,
+                    'id'
+                  )}
                 </S.GridTwoThirdsOneThird>
               </>
             )}

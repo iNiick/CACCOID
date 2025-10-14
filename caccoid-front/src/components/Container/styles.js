@@ -17,7 +17,7 @@ export const StyledContainer = styled.div`
   }
 
   @media (max-width: ${({ theme }) =>
-      theme.breakpoints.lg}) and (min-width: ${({ theme }) =>
+    theme.breakpoints.lg}) and (min-width: ${({ theme }) =>
       theme.breakpoints.sm}) {
     width: 70vw;
   }
@@ -39,7 +39,7 @@ export const BlueRowContainer = styled(StyledContainer)`
   flex-direction: row;
   gap: 1rem;
   color: var(--white);
-  width: 90%;
+  width: 80%;
   padding: 5px;
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     justify-content: center;

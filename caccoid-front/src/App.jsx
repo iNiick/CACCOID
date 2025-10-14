@@ -31,33 +31,36 @@ function App() {
               <Navbar />
               <div style={{ paddingTop: '90px', minHeight: '100vh' }}>
                 <Routes>
-                  <Route path="/" element={<MicrosoftAuth />} />
+                  <Route path="/" element={<EmailAuth />} />
                   <Route path="/microsoft-auth" element={<MicrosoftAuth />} />
                   <Route path="/email-auth" element={<EmailAuth />} />
                   <Route path="/forbidden" element={<Forbidden />} />
-                  <Route path="/form" element=
-                  {
-                    <ProtectedRoute
-                    element={<CardSolicitationForm/>}
-                    allowedRoles={['User']}
-                    />
-                  }
+                  <Route
+                    path="/form"
+                    element={
+                      <ProtectedRoute
+                        element={<CardSolicitationForm />}
+                        allowedRoles={['User']}
+                      />
+                    }
                   />
-                  <Route path="/home" element=
-                  {
-                    <ProtectedRoute
-                      element={<UserHome/>}
-                      allowedRoles={['User']}
-                    />
-                  } 
+                  <Route
+                    path="/home"
+                    element={
+                      <ProtectedRoute
+                        element={<UserHome />}
+                        allowedRoles={['User']}
+                      />
+                    }
                   />
-                  <Route path="/admin-home" element=
-                  {
-                    <ProtectedRoute
-                    element={<AdminHome/>}
-                    allowedRoles={['Admin']}
-                    />
-                  } 
+                  <Route
+                    path="/admin-home"
+                    element={
+                      <ProtectedRoute
+                        element={<AdminHome />}
+                        allowedRoles={['Admin']}
+                      />
+                    }
                   />
                 </Routes>
               </div>
