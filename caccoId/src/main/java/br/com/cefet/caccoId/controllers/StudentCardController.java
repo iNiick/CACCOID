@@ -45,11 +45,11 @@ public class StudentCardController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Dados da carteirinha retornados com sucesso"
-           ),
+            ),
             @ApiResponse(
                     responseCode = "400",
                     description = "Carteirinha não encontrada"
-           ),
+            ),
             @ApiResponse(
                     responseCode = "403",
                     description = "Usuário não autenticado ou sem permissão"
@@ -61,11 +61,11 @@ public class StudentCardController {
     })
 
     public ResponseEntity<ApiResponseDTO<?>> getStudentCardByToken(
-            @Parameter(description = "ID da carteirinha estudantil", required = true)
+            @Parameter(description = "Hash da carteirinha estudantil", required = true)
             @PathVariable String student_card_hash) {
         try {
             var studentCardData = studentCardService.getStudentCardByToken(student_card_hash);
-            return ResponseEntity.ok(new ApiResponseDTO<>(true, "Carteirinha obtida com sucesso", studentCardData ));
+            return ResponseEntity.ok(new ApiResponseDTO<>(true, "Carteirinha obtida com sucesso", studentCardData));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponseDTO<>(false, "Carteirinha não encontrada.", null));
@@ -74,6 +74,7 @@ public class StudentCardController {
                     .body(new ApiResponseDTO<>(false, "Erro interno do servidor: " + e.getMessage(), null));
         }
     }
+
     @PostMapping("/create/{studentId}")
     @Operation(
             summary = "Recebe o id do aluno e cria a carteirinha estudantil",
@@ -97,16 +98,52 @@ public class StudentCardController {
             )
     })
     public ResponseEntity<ApiResponseDTO<StudentCardDTO>> createCard(@PathVariable Long studentId) {
-        try{
+        try {
             StudentCardDTO createdCard = studentCardService.createStudentCard(studentId);
 
             return ResponseEntity.ok(new ApiResponseDTO<StudentCardDTO>(true, "Carteirinha obtida com sucesso", createdCard));
-        }
-        catch (EntityNotFoundException ex){
+        } catch (EntityNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponseDTO<>(false, "Estudante não encontrado.", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponseDTO<>(false, "Erro interno do servidor: " + e.getMessage(), null));
         }
-        catch (Exception e) {
+    }
+
+    @GetMapping("/get-card-by-id/{studentId}")
+    @Operation(
+            summary = "Obter carteirinha estudantil por id",
+            description = "Obtém a carteirinha estudantil de um aluno pelo ID.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Dados da carteirinha retornados com sucesso"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Carteirinha não encontrada"
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Usuário não autenticado ou sem permissão"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno ao retornar dados da solicitação"
+            )
+    })
+
+    public ResponseEntity<ApiResponseDTO<?>> getStudentCardByStudentId(
+            @Parameter(description = "Retorna os dados da carteirinha ao receber ID", required = true)
+            @PathVariable Long studentId) {
+        try {
+            var studentCardData = studentCardService.getStudentCardByStudentId(studentId);
+            return ResponseEntity.ok(new ApiResponseDTO<>(true, "Carteirinha obtida com sucesso", studentCardData));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponseDTO<>(false, "Carteirinha não encontrada.", null));
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponseDTO<>(false, "Erro interno do servidor: " + e.getMessage(), null));
         }
