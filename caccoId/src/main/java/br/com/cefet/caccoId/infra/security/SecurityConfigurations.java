@@ -39,7 +39,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.DELETE, "/solicitation/reject/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/reviewDocuments/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/student-card/create/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/student-card/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/student-card/**").permitAll()
                         .requestMatchers("/api-docs").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()

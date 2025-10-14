@@ -94,7 +94,7 @@ public class StudentCardService {
         return StudentCardMapper.toDTO(saved);
     }
     public StudentCard getStudentCardById(Long id) {
-        return studentCardRepository.findById(id)
+        return studentCardRepository.findByStudentId(id)
                 .orElseThrow(() -> new EntityNotFoundException("Carteirinha não encontrada"));
     }
 }
