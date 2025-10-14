@@ -10,6 +10,18 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 30MB
+  
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USER}
+    password: ${MAIL_PASS}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   jpa:
     hibernate:
@@ -20,6 +32,7 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
+    
 
 server:
   port: 8080
@@ -41,3 +54,4 @@ api:
   security:
     token:
       secret: ${JWT_SECRET}
+
