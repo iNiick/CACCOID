@@ -93,7 +93,6 @@ public class SolicitationService {
         if(!(this.finalStatusReached(solicitation.getStatus()))){
             solicitation.setStatus(updatedStatus);
             solicitationRepository.save(solicitation);
-            log.info("Status da solicitação ID {} atualizado com sucesso para '{}'.", solicitation.getId(), updatedStatus.getStatus());
         }
         return solicitation;
     }

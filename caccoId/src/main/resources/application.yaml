@@ -10,6 +10,7 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 30MB
+
   
   mail:
     host: smtp.gmail.com
@@ -32,7 +33,10 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    
+logging:
+  level:
+    root: INFO
+    br.com.cefet.caccoId: INFO
 
 server:
   port: 8080

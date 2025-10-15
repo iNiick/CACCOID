@@ -42,7 +42,7 @@ export default function AdminHome() {
     e.preventDefault();
     try {
       for (const order of selectedOrders) {
-        await api.put(`/student-card/create/${order.id}`, {});
+        await api.post(`/student-card/create/${order.id}`, {});
       }
       toast.success('Carteirinha criada com sucesso');
     } catch (error) {
