@@ -1,3 +1,4 @@
+package br.com.cefet.caccoId.controllers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
