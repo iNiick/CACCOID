@@ -54,8 +54,5 @@ export const useAPI = (hasFile = false) => {
       return Promise.reject(error);
     }
   );
-
-  console.info(`🌍 BaseURL detectada: ${baseURL}`);
-
   return api;
 };
