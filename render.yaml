@@ -3,24 +3,24 @@ services:
     name: caccoid-backend
     env: docker
     dockerfilePath: caccoId/Dockerfile
-    branch: main
+    branch: prodevelop
     plan: free
     autoDeploy: true
     envVars:
       - key: JAVA_OPTS
-        value: "-Xmx512m"
-    buildCommand: ""
-    startCommand: ""
+        value: '-Xmx512m'
+    buildCommand: ''
+    startCommand: ''
 
   - type: web
     name: caccoid-frontend
     env: docker
     dockerfilePath: caccoid-front/Dockerfile
-    branch: main
+    branch: prodevelop
     plan: free
     autoDeploy: true
     envVars:
       - key: VITE_API_URL
-        value: "https://caccoid-backend.onrender.com"
-    buildCommand: ""
-    startCommand: ""
+        value: 'https://caccoid-backend.onrender.com'
+    buildCommand: ''
+    startCommand: ''
