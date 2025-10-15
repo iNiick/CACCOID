@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import br.com.cefet.caccoId.repositories.SolicitationRepository;
 import br.com.cefet.caccoId.models.enums.SolicitationStatus;
+import br.com.cefet.caccoId.models.Solicitation;
 
 @Service
 public class StudentCardService {
@@ -55,7 +56,10 @@ public class StudentCardService {
 
         Short statusCode = (short) SolicitationStatus.fromString("AUTORIZADA").getCode();
         SolicitationStatus status = SolicitationStatus.fromCode(statusCode);
-        boolean exists = solicitationRepository.existsByStudentIdAndStatus(studentId, status); // por exemplo, status 2
+
+        boolean exists = solicitationRepository.existsByStudentIdAndStatus(studentId, status);
+        // por exemplo, status 2
+
         boolean hasActive = false;
         if (exists) {
             statusCode = 1;

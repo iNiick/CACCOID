@@ -37,7 +37,7 @@ public class StudentCardController {
     @Autowired
     private SolicitationService solicitationService;
 
-    @GetMapping("/{student_card_hash}")
+    @GetMapping("/get-card-by-hash/{student_card_hash}")
     @Operation(
             summary = "Obter carteirinha estudantil por hash",
             description = "Obtém a carteirinha estudantil de um aluno específico.")
