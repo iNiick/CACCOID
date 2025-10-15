@@ -66,7 +66,6 @@ export const CardSolicitationForm = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log('Form submitted:', data);
     setLoading(true);
 
     try {

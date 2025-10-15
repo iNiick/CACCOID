@@ -11,13 +11,42 @@ import { useAPI } from '../../hooks/useAPI';
 const StudentCardDetailsModal = ({ data, onClose, status, onDelete }) => {
   const [activeTab, setActiveTab] = useState('dados');
   const [formData, setFormData] = useState({ ...data });
-
+  const [changeRequests, setChangeRequests] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
   const api = useAPI();
 
   if (!data) return null;
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCheckboxChange = (field) => {
+    setChangeRequests((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  const handleStartChangeRequest = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelChangeRequest = () => {
+    setIsEditing(false);
+    setChangeRequests({});
+  };
+
+  const handleSendChanges = () => {
+    const camposSolicitados = Object.keys(changeRequests).filter(
+      (key) => changeRequests[key]
+    );
+    console.log('Campos solicitados para mudança:', camposSolicitados);
+    setFormData((prev) => ({ ...prev, status: 'PENDENTE' }));
+    toast.info(
+      `Status da carteirinha atualizado para pendente. Campos solicitados: ${camposSolicitados.join(
+        ', '
+      )}`
+    );
+    setIsEditing(false);
+    onClose();
   };
 
   const handleSolicitationAuthorization = async (e) => {
@@ -36,12 +65,37 @@ const StudentCardDetailsModal = ({ data, onClose, status, onDelete }) => {
     }
   };
 
+  const renderInputWithCheckbox = (title, value, field, type) => (
+    <S.InputCheckboxWrapper>
+      {isEditing && (
+        <S.CheckBox
+          checked={!!changeRequests[field]}
+          onChange={() => handleCheckboxChange(field)}
+        />
+      )}
+      <LabeledInput
+        title={title}
+        value={value}
+        onChange={(v) => handleChange(field, v)}
+        type={type}
+      />
+    </S.InputCheckboxWrapper>
+  );
+
   return (
     <S.Overlay>
       <S.ModalContainer>
         <S.CloseButton onClick={onClose}>×</S.CloseButton>
         <S.ModalContent>
-          <S.Photo src={formData.studentPhoto} alt={formData.nome} />
+          <S.InputCheckboxWrapper>
+            {isEditing && (
+              <S.CheckBox
+                checked={!!changeRequests.studentPhoto}
+                onChange={() => handleCheckboxChange('studentPhoto')}
+              />
+            )}
+            <S.Photo src={formData.studentPhoto} alt={formData.nome} />
+          </S.InputCheckboxWrapper>
           <S.RightContent>
             <S.Tabs>
               <S.Tab
@@ -67,58 +121,58 @@ const StudentCardDetailsModal = ({ data, onClose, status, onDelete }) => {
             {activeTab === 'dados' && (
               <>
                 <S.GridTwoThirdsOneThird>
-                  <LabeledInput
-                    title="Nome"
-                    value={formData.student.name}
-                    onChange={(v) => handleChange('nome', v)}
-                  />
-                  <LabeledInput
-                    title="Data do pedido"
-                    value={dateFormatter(formData.requestDate)}
-                    onChange={(v) => handleChange('data', v)}
-                  />
+                  {renderInputWithCheckbox(
+                    'Nome',
+                    formData.student.name,
+                    'nome'
+                  )}
+                  {renderInputWithCheckbox(
+                    'Data do pedido',
+                    dateFormatter(formData.requestDate),
+                    'data'
+                  )}
                 </S.GridTwoThirdsOneThird>
+
                 <S.GridThreeEqual>
-                  <LabeledInput
-                    title="RG"
-                    value={formData.student.rg}
-                    onChange={(v) => handleChange('rg', v)}
-                  />
-                  <LabeledInput
-                    title="CPF"
-                    value={formData.student.cpf}
-                    onChange={(v) => handleChange('cpf', v)}
-                  />
-                  <LabeledInput
-                    title="Matrícula"
-                    value={formData.student.enrollmentNumber}
-                    onChange={(v) => handleChange('matricula', v)}
-                  />
+                  {renderInputWithCheckbox('RG', formData.student.rg, 'rg')}
+                  {renderInputWithCheckbox('CPF', formData.student.cpf, 'cpf')}
+                  {renderInputWithCheckbox(
+                    'Matrícula',
+                    formData.student.enrollmentNumber,
+                    'matricula'
+                  )}
                 </S.GridThreeEqual>
+
                 <S.GridTwoEqual>
-                  <LabeledInput
-                    title="Curso"
-                    value={formData.student.program}
-                    onChange={(v) => handleChange('curso', v)}
-                  />
-                  <LabeledInput
-                    title="Instituição"
-                    value={formData.student.institution}
-                    onChange={(v) => handleChange('instituicao', v)}
-                  />
+                  {renderInputWithCheckbox(
+                    'Curso',
+                    formData.student.program,
+                    'curso'
+                  )}
+                  {renderInputWithCheckbox(
+                    'Instituição',
+                    formData.student.institution,
+                    'instituicao'
+                  )}
                 </S.GridTwoEqual>
+
                 <S.GridTwoThirdsOneThird>
-                  <LabeledInput
-                    title="E-mail"
-                    type="email"
-                    value={formData.student.email}
-                    onChange={(v) => handleChange('email', v)}
-                  />
-                  <LabeledInput
-                    title="Telefone"
-                    value={formData.student.telephone}
-                    onChange={(v) => handleChange('telefone', v)}
-                  />
+                  {renderInputWithCheckbox(
+                    'E-mail',
+                    formData.student.email,
+                    'email',
+                    'email'
+                  )}
+                  {renderInputWithCheckbox(
+                    'Telefone',
+                    formData.student.telephone,
+                    'telefone'
+                  )}
+                  {renderInputWithCheckbox(
+                    'Id do Estudante',
+                    formData.student.id,
+                    'id'
+                  )}
                 </S.GridTwoThirdsOneThird>
               </>
             )}
@@ -126,130 +180,117 @@ const StudentCardDetailsModal = ({ data, onClose, status, onDelete }) => {
             {activeTab === 'entrega' && (
               <>
                 <S.GridSingleColumn>
-                  <LabeledInput
-                    title="Modalidade"
-                    value={formData.modalidade}
-                    onChange={(v) => handleChange('modalidade', v)}
-                  />
+                  {renderInputWithCheckbox(
+                    'Modalidade',
+                    formData.modalidade,
+                    'modalidade'
+                  )}
                 </S.GridSingleColumn>
+
                 <S.GridTwoThirdsOneThird>
-                  <LabeledInput
-                    title="Lougradouro"
-                    value={formData.lougradouro}
-                    onChange={(v) => handleChange('lougradouro', v)}
-                  />
-                  <LabeledInput
-                    title="Número"
-                    value={formData.numero}
-                    onChange={(v) => handleChange('numero', v)}
-                  />
+                  {renderInputWithCheckbox(
+                    'Lougradouro',
+                    formData.lougradouro,
+                    'lougradouro'
+                  )}
+                  {renderInputWithCheckbox('Número', formData.numero, 'numero')}
                 </S.GridTwoThirdsOneThird>
+
                 <S.GridTwoThirdsOneThird>
-                  <LabeledInput
-                    title="Complemento"
-                    value={formData.complemento}
-                    onChange={(v) => handleChange('complemento', v)}
-                  />
-                  <LabeledInput
-                    title="CEP"
-                    value={formData.cep}
-                    onChange={(v) => handleChange('cep', v)}
-                  />
+                  {renderInputWithCheckbox(
+                    'Complemento',
+                    formData.complemento,
+                    'complemento'
+                  )}
+                  {renderInputWithCheckbox('CEP', formData.cep, 'cep')}
                 </S.GridTwoThirdsOneThird>
+
                 <S.GridThreeEqual>
-                  <LabeledInput
-                    title="Bairro"
-                    value={formData.bairro}
-                    onChange={(v) => handleChange('bairro', v)}
-                  />
-                  <LabeledInput
-                    title="Estado"
-                    value={formData.estado}
-                    onChange={(v) => handleChange('estado', v)}
-                  />
-                  <LabeledInput
-                    title="Cidade"
-                    value={formData.cidade}
-                    onChange={(v) => handleChange('cidade', v)}
-                  />
+                  {renderInputWithCheckbox('Bairro', formData.bairro, 'bairro')}
+                  {renderInputWithCheckbox('Estado', formData.estado, 'estado')}
+                  {renderInputWithCheckbox('Cidade', formData.cidade, 'cidade')}
                 </S.GridThreeEqual>
               </>
             )}
+
             {activeTab === 'documentos' && (
               <>
-                <S.DocumentDiv>
-                  Compovante de Matrícula
-                  <S.OpenButtonIcon>
-                    <a
-                      href={formData.enrollmentProof}
-                      download={`comprovante_matricula.${formData.enrollmentProof.substring(
-                        formData.enrollmentProof.indexOf('/') + 1,
-                        formData.enrollmentProof.indexOf(';')
-                      )}`}
-                    >
-                      <img src={openIcon} style={{ cursor: 'pointer' }} />
-                    </a>
-                  </S.OpenButtonIcon>
-                </S.DocumentDiv>
-                <S.DocumentDiv>
-                  Compovante de Pagamento{' '}
-                  <S.OpenButtonIcon>
-                    <a
-                      href={formData.paymentProof}
-                      download={`comprovante_pagamento.${formData.paymentProof.substring(
-                        formData.paymentProof.indexOf('/') + 1,
-                        formData.paymentProof.indexOf(';')
-                      )}`}
-                    >
-                      <img src={openIcon} style={{ cursor: 'pointer' }} />
-                    </a>
-                  </S.OpenButtonIcon>
-                </S.DocumentDiv>
-                <S.DocumentDiv>
-                  Documento de Identificação - Frente{' '}
-                  <S.OpenButtonIcon>
-                    <a
-                      href={formData.identityDocumentFront}
-                      download={`identidade_frente.${formData.identityDocumentFront.substring(
-                        formData.identityDocumentFront.indexOf('/') + 1,
-                        formData.identityDocumentFront.indexOf(';')
-                      )}`}
-                    >
-                      <img src={openIcon} style={{ cursor: 'pointer' }} />
-                    </a>
-                  </S.OpenButtonIcon>
-                </S.DocumentDiv>
-                <S.DocumentDiv>
-                  Documento de Identificação - Verso{' '}
-                  <S.OpenButtonIcon>
-                    <a
-                      href={formData.identityDocumentBack}
-                      download={`identidade_verso.${formData.identityDocumentBack.substring(
-                        formData.identityDocumentBack.indexOf('/') + 1,
-                        formData.identityDocumentBack.indexOf(';')
-                      )}`}
-                    >
-                      <img src={openIcon} style={{ cursor: 'pointer' }} />
-                    </a>
-                  </S.OpenButtonIcon>
-                </S.DocumentDiv>
+                {[
+                  'enrollmentProof',
+                  'paymentProof',
+                  'identityDocumentFront',
+                  'identityDocumentBack',
+                ].map((docField) => (
+                  <S.DocumentDiv key={docField}>
+                    {isEditing && (
+                      <S.CheckBox
+                        checked={!!changeRequests[docField]}
+                        onChange={() => handleCheckboxChange(docField)}
+                      />
+                    )}
+                    {(() => {
+                      switch (docField) {
+                        case 'enrollmentProof':
+                          return 'Comprovante de Matrícula';
+                        case 'paymentProof':
+                          return 'Comprovante de Pagamento';
+                        case 'identityDocumentFront':
+                          return 'Documento de Identificação - Frente';
+                        case 'identityDocumentBack':
+                          return 'Documento de Identificação - Verso';
+                      }
+                    })()}
+                    <S.OpenButtonIcon>
+                      <a
+                        href={formData[docField]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img src={openIcon} style={{ cursor: 'pointer' }} />
+                      </a>
+                    </S.OpenButtonIcon>
+                  </S.DocumentDiv>
+                ))}
               </>
             )}
           </S.RightContent>
         </S.ModalContent>
+
         {(status === 'SOLICITADAS' || status === 'PENDENTES') && (
           <S.Actions>
             <S.DeleteButtonIcon onClick={() => onDelete(data.id)}>
               <img src={deleteIcon} />
             </S.DeleteButtonIcon>
 
-            <ActionButton variant="quaternary">SOLICITAR MUDANÇA</ActionButton>
-            <ActionButton
-              variant="primary"
-              onClick={handleSolicitationAuthorization}
-            >
-              AUTORIZAR
-            </ActionButton>
+            {!isEditing ? (
+              <ActionButton
+                variant="quaternary"
+                onClick={handleStartChangeRequest}
+              >
+                SOLICITAR MUDANÇA
+              </ActionButton>
+            ) : (
+              <>
+                <ActionButton
+                  variant="quaternary"
+                  onClick={handleCancelChangeRequest}
+                >
+                  VOLTAR
+                </ActionButton>
+                <ActionButton variant="primary" onClick={handleSendChanges}>
+                  ENVIAR
+                </ActionButton>
+              </>
+            )}
+
+            {!isEditing && (
+              <ActionButton
+                variant="primary"
+                onClick={handleSolicitationAuthorization}
+              >
+                AUTORIZAR
+              </ActionButton>
+            )}
           </S.Actions>
         )}
       </S.ModalContainer>

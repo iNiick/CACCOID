@@ -11,6 +11,19 @@ spring:
       max-file-size: 5MB
       max-request-size: 30MB
 
+  
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USER}
+    password: ${MAIL_PASS}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,8 +33,13 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
+logging:
+  level:
+    root: INFO
+    br.com.cefet.caccoId: INFO
 
 server:
+  address: 0.0.0.0
   port: 8080
 
 springdoc:
@@ -41,3 +59,4 @@ api:
   security:
     token:
       secret: ${JWT_SECRET}
+

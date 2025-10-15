@@ -9,6 +9,7 @@ import LabeledInput from '../../components/LabeledInput';
 import { useAPI } from '../../hooks/useAPI';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
+import alertIcon from '../../assets/alert-red-icon.svg';
 
 export default function EmailAuth() {
   const [loginEmail, setLoginEmail] = useState('');
@@ -26,7 +27,7 @@ export default function EmailAuth() {
     if (token) {
       navigate('/home');
     }
-  }, []);
+  }, [navigate]);
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -61,6 +62,9 @@ export default function EmailAuth() {
       });
 
       toast.success('Cadastro realizado com sucesso');
+      setRegisterEmail('');
+      setRegisterPassword('');
+      setConfirmPassword('');
     } catch (error) {
       if (error.response?.status === 409) {
         toast.error(error.response?.data?.message);
@@ -75,16 +79,31 @@ export default function EmailAuth() {
       <S.BlueContainerDiv>
         <Container variant="blueRow">
           <S.StyledH3>
-            Tenha sua carteirinha de estudante com praticidade!
+            <img src={alertIcon} />
+            <strong>ATENÇÃO: ESTE É UM SITE DE TESTE</strong>
             <br />
-            <strong>Acesse com seu e-mail institucional do CEFET-RJ:</strong>
+            As carteirinhas exibidas aqui são apenas para demonstração e não
+            possuem validade oficial.
           </S.StyledH3>
+          {/*
           <S.StyledDiv>
             <ActionButton variant="quaternary">
               <S.MicrosoftIcon src={MicrosoftLogo} />
               FAÇA LOGIN COM CONTA MICROSOFT
             </ActionButton>
           </S.StyledDiv>
+          */}
+        </Container>
+      </S.BlueContainerDiv>
+
+      <S.BlueContainerDiv>
+        <Container variant="blueRow">
+          <S.StyledH3>
+            Seus dados pessoais são armazenados de forma segura, com
+            criptografia, em conformidade com a Lei Geral de Proteção de Dados
+            (LGPD). Informamos que nenhuma informação é compartilhada com
+            terceiros.
+          </S.StyledH3>
         </Container>
       </S.BlueContainerDiv>
 

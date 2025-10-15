@@ -17,6 +17,12 @@ export const StyledH3 = styled.h3`
   color: var(--white);
   margin: 1rem;
   flex: 1;
+  margin-right: 2rem;
+
+  img {
+    vertical-align: middle;
+    margin-right: 6px;
+  }
 `;
 
 export const MicrosoftIcon = styled.img`

@@ -5,13 +5,13 @@ export const ProgressBarContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0 3rem;
+  padding: 0 1rem;
   overflow-x: auto;
 
   @media screen and (max-width: 600px) {
-    flex-direction: column;
-    align-items: center;
-    padding: 3rem 0;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 0.5rem;
   }
 `;
 
@@ -20,8 +20,8 @@ export const ProgressStep = styled.div`
     completed === 'completed' ? '#00aaff' : 'var(--lightest-grey)'};
   border: ${({ step }) => (step === 'active' ? '2px solid #00aaff' : 'none')};
   border-radius: 50%;
-  width: 5rem;
-  height: 5rem;
+  width: 3.5rem;
+  height: 3.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,19 +30,19 @@ export const ProgressStep = styled.div`
   flex-shrink: 0;
 
   @media screen and (max-width: 600px) {
-    width: 4rem;
-    height: 4rem;
+    width: 2.5rem;
+    height: 2.5rem;
   }
 `;
 
 export const StepIcon = styled.img`
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   object-fit: contain;
 
   @media screen and (max-width: 600px) {
-    width: 2rem;
-    height: 2rem;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 `;
 
@@ -54,7 +54,6 @@ export const ProgressLine = styled.div`
   align-self: center;
 
   @media screen and (max-width: 600px) {
-    width: 4px;
-    height: 3rem;
+    height: 3px;
   }
 `;

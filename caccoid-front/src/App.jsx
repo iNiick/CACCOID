@@ -5,6 +5,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CardSolicitationForm } from './pages/CardSolicitationForm';
 import EmailAuth from './pages/EmailAuth';
 import MicrosoftAuth from './pages/MicrosoftAuth';
+import CardNotFound from './pages/CardNotFound';
+import StudentCard from './pages/StudentCard';
 import Navbar from './components/Navbar/index';
 import Forbidden from './pages/Forbidden';
 import { ThemeProvider } from 'styled-components';
@@ -31,33 +33,44 @@ function App() {
               <Navbar />
               <div style={{ paddingTop: '90px', minHeight: '100vh' }}>
                 <Routes>
-                  <Route path="/" element={<MicrosoftAuth />} />
+                  <Route path="/" element={<EmailAuth />} />
                   <Route path="/microsoft-auth" element={<MicrosoftAuth />} />
                   <Route path="/email-auth" element={<EmailAuth />} />
                   <Route path="/forbidden" element={<Forbidden />} />
-                  <Route path="/form" element=
-                  {
-                    <ProtectedRoute
-                    element={<CardSolicitationForm/>}
-                    allowedRoles={['User']}
-                    />
-                  }
+                  <Route
+                    path="/carteirinha-invalida"
+                    element={<CardNotFound />}
                   />
-                  <Route path="/home" element=
-                  {
-                    <ProtectedRoute
-                      element={<UserHome/>}
-                      allowedRoles={['User']}
-                    />
-                  } 
+                  <Route
+                    path="/carteirinha/:cardId"
+                    element={<StudentCard />}
                   />
-                  <Route path="/admin-home" element=
-                  {
-                    <ProtectedRoute
-                    element={<AdminHome/>}
-                    allowedRoles={['Admin']}
-                    />
-                  } 
+                  <Route
+                    path="/form"
+                    element={
+                      <ProtectedRoute
+                        element={<CardSolicitationForm />}
+                        allowedRoles={['User']}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/home"
+                    element={
+                      <ProtectedRoute
+                        element={<UserHome />}
+                        allowedRoles={['User']}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/admin-home"
+                    element={
+                      <ProtectedRoute
+                        element={<AdminHome />}
+                        allowedRoles={['Admin']}
+                      />
+                    }
                   />
                 </Routes>
               </div>

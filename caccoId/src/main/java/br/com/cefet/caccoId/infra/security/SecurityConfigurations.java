@@ -17,12 +17,24 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
+    @Value("${LOCAL_FRONTEND}")
+    private String localFrontend;
+
+    @Value("${LOCALHOST}")
+    private String localhostFrontend;
+
+    @Value("${PROD_FRONTEND}")
+    private String prodFrontend;
+    @Value("${isDev}")
+    private boolean isDev;
+
     @Autowired
     private SecurityFilter securityFilter;
 
@@ -37,6 +49,9 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.GET, "/solicitation/get/status/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/solicitation/authorize/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/solicitation/reject/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/reviewDocuments/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/student-card/create/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/student-card/**").permitAll()
                         .requestMatchers("/api-docs").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
@@ -52,7 +67,13 @@ public class SecurityConfigurations {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173", "https://caccoid-frontend.onrender.com"));
+        if (isDev) {
+            // Desenvolvimento: PC local + localhost
+            config.setAllowedOrigins(List.of(localFrontend, localhostFrontend));
+        } else {
+            // Produção: apenas frontend oficial
+            config.setAllowedOrigins(List.of(prodFrontend));
+        }
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

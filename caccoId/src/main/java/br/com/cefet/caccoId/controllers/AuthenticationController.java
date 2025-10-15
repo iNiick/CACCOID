@@ -5,6 +5,7 @@ import br.com.cefet.caccoId.dtos.AuthenticationDTO;
 import br.com.cefet.caccoId.dtos.UserRegisterDTO;
 import br.com.cefet.caccoId.repositories.UserRepository;
 import br.com.cefet.caccoId.services.AuthenticationService;
+import br.com.cefet.caccoId.services.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -29,6 +30,8 @@ import java.util.Map;
 public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
+    @Autowired
+    private EmailService emailService;
 
     @Operation(
             summary = "Login de usuário",
@@ -68,6 +71,8 @@ public class AuthenticationController {
         try {
             authenticationService.register(userRegisterDTO, false);
             var response = new ApiResponseDTO<>(true, "Usuário registrado com sucesso.", null);
+            String email = userRegisterDTO.getEmail();
+            emailService.sendEmail(email, "Usuário cadastrado!", "Seu cadastro foi realizado com sucesso! Faça login para solicitar sua carteirinha.");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }catch (InternalAuthenticationServiceException e){
             var response = new ApiResponseDTO<>(false, "Já existe um usuário com esse e-mail.", null);

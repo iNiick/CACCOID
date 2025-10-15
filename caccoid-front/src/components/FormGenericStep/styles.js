@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-
-
 export const FormStep = styled.div`
   width: 100%;
   margin-bottom: 3rem;
@@ -16,6 +14,11 @@ export const Title = styled.h2`
   font-family: 'Bebas Neue', sans-serif;
   font-weight: 400;
   font-size: 1.8rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.4rem;
+    text-align: center;
+  }
 `
 
 export const FormGrid = styled.div`
@@ -23,6 +26,11 @@ export const FormGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 `
 
 export const FormColumn = styled.div`
@@ -50,11 +58,14 @@ export const FormInputLabel = styled.p`
   & > span {
     color: #f04036;
   }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `
 
 export const GenericInput = styled.input`
   font-family: 'Roboto Mono', monospace;
-  font-size: 1.5rem;
   color: black;
   background-color: white;
   border: 2px solid #d9d9d9;
@@ -64,17 +75,22 @@ export const GenericInput = styled.input`
   padding-left: 0.8rem;
   font-size: 1.25rem;
 
-  &:focus, hover {
+  &:focus, &:hover {
     border: 2px solid #00aaff;
     outline: none;
-  } 
-    
+  }
+
   &::placeholder {
     color: #000000;
     opacity: 0.3;
     font-family: 'Roboto Mono', monospace;
     font-size: 1.25rem;
-    padding-left: 0.8rem;
+  }
+
+  @media (max-width: 768px) {
+    width: 90%;
+    height: 3rem;
+    font-size: 1rem;
   }
 `
 
@@ -89,23 +105,31 @@ export const GenericSelect = styled.select`
   height: 3.5rem;
   padding-left: 0.8rem;
 
-  &:focus, hover {
+  &:focus, &:hover {
     border: 2px solid #00aaff;
     outline: none;
-  }     
+  }
+
+  @media (max-width: 768px) {
+    width: 90%;
+    height: 3rem;
+    font-size: 1rem;
+  }
 `
 
 export const ErrorMessage = styled.span`
   color: #f04036;
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.2rem;
-`
 
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+`
 
 export const DatePickerContainer = styled.div`
   .form-input {
     font-family: 'Roboto Mono', monospace;
-    font-size: 1.5rem;
     color: black;
     background-color: white;
     border: 2px solid #d9d9d9;
@@ -115,18 +139,22 @@ export const DatePickerContainer = styled.div`
     padding-left: 0.8rem;
     font-size: 1.25rem;
 
-
-    &:focus, hover {
+    &:focus, &:hover {
       border: 2px solid #00aaff;
       outline: none;
-    } 
-    
+    }
+
     &::placeholder {
       color: #000000;
       opacity: 0.3;
       font-family: 'Roboto Mono', monospace;
       font-size: 1.25rem;
-      padding-left: 0.8rem;
+    }
+
+    @media (max-width: 768px) {
+      width: 90%;
+      height: 3rem;
+      font-size: 1rem;
     }
   }
 `
