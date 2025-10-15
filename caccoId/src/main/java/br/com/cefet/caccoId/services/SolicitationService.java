@@ -65,7 +65,8 @@ public class SolicitationService {
                 "status", solicitation.getStatus().getStatus(),
                 "photo", "data:" + mimeType + ";base64," + base64,
                 "rejected", solicitation.getRejected(),
-                "pendingEdit", solicitation.getPendingEdit());
+                "pendingEdit", solicitation.getPendingEdit(),
+                "studentId", solicitation.getStudent().getId());
     }
 
 

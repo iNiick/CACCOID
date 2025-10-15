@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import * as S from './styles';
 import userDefault from '../../assets/user-default.jpg';
 import alertIcon from '../../assets/alert-red-icon.svg';
@@ -11,15 +12,20 @@ export const CardUserOrder = ({
   status,
   srcImg,
   isEditAvailable = false,
+  studentId,
 }) => {
+  const navigate = useNavigate();
+
   const getLabel = (status) => {
     switch (status) {
       case 'PENDENTE':
         return 'Pendente';
       case 'AUTORIZADA':
-        return 'Autorizada';
+        return 'Aguardando emissão';
       case 'EM_ANALISE':
         return 'Em análise';
+      case 'EMITIDA':
+        return 'Emitida';
       default:
         return '';
     }
@@ -41,9 +47,18 @@ export const CardUserOrder = ({
               <span />
               {getLabel(status)}
             </S.Status>
+            {status === 'EMITIDA' && (
+              <ActionButton
+                variant="secondary"
+                onClick={() => navigate(`/carteirinha/${studentId}`)}
+              >
+                Ver Carteirinha
+              </ActionButton>
+            )}
           </S.InfoItem>
         </S.InfoContainer>
       </S.Content>
+
       <S.CardActions>
         {isEditAvailable && (
           <S.AlertContainer>
@@ -56,9 +71,7 @@ export const CardUserOrder = ({
         )}
         {isEditAvailable && (
           <ActionButton
-            onClick={() => {
-              console.log('Editar');
-            }}
+            onClick={() => console.log('Editar')}
             iconSrc={editIcon}
           >
             Editar

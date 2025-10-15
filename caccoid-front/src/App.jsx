@@ -5,6 +5,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CardSolicitationForm } from './pages/CardSolicitationForm';
 import EmailAuth from './pages/EmailAuth';
 import MicrosoftAuth from './pages/MicrosoftAuth';
+import CardNotFound from './pages/CardNotFound';
+import StudentCard from './pages/StudentCard';
 import Navbar from './components/Navbar/index';
 import Forbidden from './pages/Forbidden';
 import { ThemeProvider } from 'styled-components';
@@ -35,6 +37,14 @@ function App() {
                   <Route path="/microsoft-auth" element={<MicrosoftAuth />} />
                   <Route path="/email-auth" element={<EmailAuth />} />
                   <Route path="/forbidden" element={<Forbidden />} />
+                  <Route
+                    path="/carteirinha-invalida"
+                    element={<CardNotFound />}
+                  />
+                  <Route
+                    path="/carteirinha/:cardId"
+                    element={<StudentCard />}
+                  />
                   <Route
                     path="/form"
                     element={

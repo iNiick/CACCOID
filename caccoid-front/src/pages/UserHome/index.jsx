@@ -45,10 +45,6 @@ export default function UserHome() {
 
   return (
     <S.Container>
-      <S.LabelPage>
-        <S.LabelButton>Solicitação</S.LabelButton>
-      </S.LabelPage>
-
       {data && (
         <CardUserOrder
           title={data?.studentName}
@@ -56,6 +52,7 @@ export default function UserHome() {
           status={data?.status}
           isEditAvailable={data?.pendingEdit}
           srcImg={data?.photo}
+          studentId={data?.studentId}
         />
       )}
       <ContactForm />
