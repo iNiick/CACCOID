@@ -26,6 +26,8 @@ public class StudentCardMapper {
                 .studentId(studentCard.getStudent() != null ? studentCard.getStudent().getId() : null)
                 .studentPhotoBase64(studentCard.getStudentPhoto() != null ?
                         Base64.getEncoder().encodeToString(studentCard.getStudentPhoto()) : null)
+                .cpf(studentCard.getStudent() != null ? studentCard.getStudent().getCpf() : null)
+                .rg(studentCard.getStudent() != null ? studentCard.getStudent().getRg() : null)
                 .build();
     }
 

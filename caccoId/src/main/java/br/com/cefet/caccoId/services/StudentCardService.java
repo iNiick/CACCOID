@@ -17,6 +17,8 @@ import java.util.UUID;
 import br.com.cefet.caccoId.repositories.SolicitationRepository;
 import br.com.cefet.caccoId.models.enums.SolicitationStatus;
 import br.com.cefet.caccoId.models.Solicitation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class StudentCardService {
@@ -26,9 +28,42 @@ public class StudentCardService {
     private StudentCardRepository studentCardRepository;
     @Autowired
     private SolicitationRepository solicitationRepository;
-
     @Autowired
     private StudentRepository studentRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(StudentCardService.class);
+
+    /**
+     * Verifica carteirinhas expiradas e retorna a carteirinha ativa mais recente.
+     * Retorna null se não houver carteirinha ativa.
+     */
+    public StudentCard checkAndGetActiveCard(Long studentId) {
+        LocalDate today = LocalDate.now();
+        StudentCard activeCard = null;
+
+        List<StudentCard> cards = studentCardRepository.findAllByStudentId(studentId);
+        for (StudentCard c : cards) {
+            if (c.isCurrentCard() && c.getValidity().isBefore(today)) {
+                c.setCurrentCard(false);
+                studentCardRepository.save(c);
+                log.info("Carteirinha ID {} expirada desativada.", c.getId());
+
+                // Atualiza status da solicitação para "AUTORIZADA"
+                Short statusCode = (short) SolicitationStatus.fromString("AUTORIZADA").getCode();
+                solicitationService.updateStatus(statusCode, studentId);
+            }
+        }
+
+        // Busca novamente a carteirinha ativa após a desativação das expiradas
+        for (StudentCard c : studentCardRepository.findAllByStudentId(studentId)) {
+            if (c.isCurrentCard()) {
+                activeCard = c;
+                break; // considera a primeira encontrada como a mais recente
+            }
+        }
+
+        return activeCard;
+    }
 
     public StudentCardDTO getStudentCardByToken(String token) {
         StudentCard card = studentCardRepository.findByValidityToken(token)
@@ -36,53 +71,45 @@ public class StudentCardService {
         return StudentCardMapper.toDTO(card);
     }
 
-    public StudentCardDTO getStudentCardByStudentId(Long StudentId) {
-        StudentCard card = studentCardRepository.findByStudentId(StudentId)
-                .orElseThrow(() -> new EntityNotFoundException("Carteirinha não encontrada"));
-        return StudentCardMapper.toDTO(card);
+    public StudentCardDTO getStudentCardByStudentId(Long studentId) {
+        StudentCard activeCard = checkAndGetActiveCard(studentId);
+
+        if (activeCard == null) {
+            throw new IllegalStateException("Nenhuma carteirinha ativa encontrada para este estudante");
+        }
+
+        return StudentCardMapper.toDTO(activeCard);
     }
 
     public StudentCardDTO createStudentCard(Long studentId) {
+        // Verifica carteirinha ativa
+        StudentCard activeCard = checkAndGetActiveCard(studentId);
+        if (activeCard != null) {
+            throw new IllegalStateException("Já existe uma carteirinha ativa para este estudante");
+        }
+
         // Busca estudante
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new EntityNotFoundException("Estudante não encontrado"));
 
         LocalDate today = LocalDate.now();
 
-        // Busca todas as carteirinhas do estudante
-        List<StudentCard> cards = studentCardRepository.findAllByStudentId(studentId);
+        // Busca solicitações autorizadas
+        Short statusAuthorizedCode = (short) SolicitationStatus.fromString("AUTORIZADA").getCode();
+        List<Solicitation> solicitations = solicitationRepository.findByStudentIdAndStatus(studentId,
+                SolicitationStatus.fromCode(statusAuthorizedCode));
 
-        // Desativa carteirinhas expiradas -- CONFERIR O ENUM SolicitationStatus
-
-        Short statusCode = (short) SolicitationStatus.fromString("AUTORIZADA").getCode();
-        SolicitationStatus status = SolicitationStatus.fromCode(statusCode);
-
-        boolean exists = solicitationRepository.existsByStudentIdAndStatus(studentId, status);
-        // por exemplo, status 2
-
-        boolean hasActive = false;
-        if (exists) {
-            statusCode = 1;
-        }
-        for (StudentCard c : cards) {
-            if (c.isCurrentCard() && c.getValidity().isBefore(today)) {
-                c.setCurrentCard(false);
-                studentCardRepository.save(c);
-                solicitationService.updateStatus(statusCode, studentId);
-                // Status "Autorizada"
-
-            }
-            if (c.isCurrentCard()) {
-                hasActive = true;
-            }
+        if (solicitations.isEmpty()) {
+            throw new IllegalStateException("Nenhuma solicitação autorizada encontrada para este estudante");
         }
 
-        // Impede criação se já existir carteirinha ativa
-        if (hasActive) {
-            throw new IllegalStateException("Já existe uma carteirinha ativa para este estudante");
-        }
+// Pega a primeira solicitação autorizada
+        Solicitation solicitation = solicitations.get(0);
 
-        // Cria nova carteirinha
+// Obtem a foto do estudante
+        byte[] studentPhotoBytes = solicitation.getStudentPhoto();
+
+// Cria nova carteirinha
         StudentCard newCard = StudentCard.builder()
                 .student(student)
                 .name(student.getName())
@@ -91,16 +118,20 @@ public class StudentCardService {
                 .enrollmentNumber(student.getEnrollmentNumber())
                 .dateOfBirth(student.getDateOfBirth())
                 .educationLevel(student.getEducationLevel())
-                // Validade sempre 31/03 do ano seguinte
                 .validity(LocalDate.of(today.getYear() + 1, 3, 31))
                 .emissionDateTime(LocalDateTime.now())
                 .isCurrentCard(true)
-                .validityToken(UUID.randomUUID().toString()) // placeholder
+                .studentPhoto(studentPhotoBytes)
+                .validityToken(UUID.randomUUID().toString())
                 .build();
 
         StudentCard saved = studentCardRepository.save(newCard);
-        statusCode = (short) 3; // Status "EMITIDA"
-        solicitationService.updateStatus(statusCode,studentId);
+
+// Atualiza status da solicitação para EMITIDA apenas se for diferente
+        Short statusIssuedCode = (short) SolicitationStatus.ISSUED.getCode();
+        if (solicitation.getStatus().getCode() != statusIssuedCode) {
+            solicitationService.updateStatus(statusIssuedCode, solicitation.getId());
+        }
         return StudentCardMapper.toDTO(saved);
     }
 }

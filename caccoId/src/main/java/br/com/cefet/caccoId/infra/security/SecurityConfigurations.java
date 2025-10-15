@@ -17,12 +17,24 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
+    @Value("${LOCAL_FRONTEND}")
+    private String localFrontend;
+
+    @Value("${LOCALHOST}")
+    private String localhostFrontend;
+
+    @Value("${PROD_FRONTEND}")
+    private String prodFrontend;
+    @Value("${isDev}")
+    private boolean isDev;
+
     @Autowired
     private SecurityFilter securityFilter;
 
@@ -55,7 +67,13 @@ public class SecurityConfigurations {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        if (isDev) {
+            // Desenvolvimento: PC local + localhost
+            config.setAllowedOrigins(List.of(localFrontend, localhostFrontend));
+        } else {
+            // Produção: apenas frontend oficial
+            config.setAllowedOrigins(List.of(prodFrontend));
+        }
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
