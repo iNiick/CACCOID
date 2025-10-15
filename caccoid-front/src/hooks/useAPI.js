@@ -14,7 +14,9 @@ export const useAPI = (hasFile = false) => {
     } else if (isDocker) {
       baseURL = `http://${hostname}:8080`;
     } else if (isProduction) {
-      baseURL = import.meta.env.VITE_API_URL ?? 'https://api.seudominio.com';
+      baseURL =
+        import.meta.env.VITE_API_BASE_URL ||
+        'https://caccoid-backend.onrender.com';
     }
   } catch (err) {
     console.warn('⚠️ Erro ao detectar ambiente, usando fallback local:', err);
