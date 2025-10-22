@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     const savedRole = localStorage.getItem('role');
 
     if (token && savedRole) {
-      setUserName(savedRole === 'User' ? 'Aluno' : 'Administrador');
+      setUserName(savedRole === 'User' ? 'Aluno' : 'Admin');
       setRole(savedRole);
     }
 
@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', token);
     localStorage.setItem('role', role);
     setRole(role);
-    setUserName(role === 'User' ? 'Aluno' : 'Administrador');
+    setUserName(role === 'User' ? 'Aluno' : 'Admin');
   };
 
   const logout = () => {
@@ -46,4 +46,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

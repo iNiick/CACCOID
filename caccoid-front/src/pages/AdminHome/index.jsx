@@ -38,6 +38,18 @@ export default function AdminHome() {
     }
   };
 
+  const handleCreateStudentCard = async (e) => {
+    e.preventDefault();
+    try {
+      for (const order of selectedOrders) {
+        await api.post(`/student-card/create/${order.id}`, {});
+      }
+      toast.success('Carteirinha criada com sucesso');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Erro ao criar carteirinha');
+    }
+  };
+
   const handleAuthorizationRevert = async (e) => {
     e.preventDefault();
     try {
@@ -82,7 +94,7 @@ export default function AdminHome() {
         )}
         {selectedTab === 'AUTORIZADAS' && (
           <S.AuthTabButton
-            onClick={() => console.log(selectedOrders)}
+            onClick={handleCreateStudentCard}
             isEmitButton={true}
           >
             Enviar Virtual

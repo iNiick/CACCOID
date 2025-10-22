@@ -29,4 +29,6 @@ public class StudentCardDTO {
     private boolean isCurrentCard;
     private Long solicitationId;
     private String studentPhotoBase64;
+    private String cpf;
+    private String rg;
 }

@@ -22,10 +22,18 @@ public class StudentCardMapper {
                 .emissionDateTime(studentCard.getEmissionDateTime())
                 .validityToken(studentCard.getValidityToken())
                 .isCurrentCard(studentCard.isCurrentCard())
+<<<<<<< HEAD
                 .solicitationId(studentCard.getSolicitation() != null
                         ? studentCard.getSolicitation().getId()
                         : null)
                 .studentPhotoBase64(Base64.getEncoder().encodeToString(studentCard.getStudentPhoto()))
+=======
+                .studentId(studentCard.getStudent() != null ? studentCard.getStudent().getId() : null)
+                .studentPhotoBase64(studentCard.getStudentPhoto() != null ?
+                        Base64.getEncoder().encodeToString(studentCard.getStudentPhoto()) : null)
+                .cpf(studentCard.getStudent() != null ? studentCard.getStudent().getCpf() : null)
+                .rg(studentCard.getStudent() != null ? studentCard.getStudent().getRg() : null)
+>>>>>>> origin/develop
                 .build();
     }
 

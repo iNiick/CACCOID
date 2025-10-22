@@ -59,6 +59,7 @@ public class StudentCardService {
         if (hasActive) {
             throw new IllegalStateException("Já existe uma carteirinha ativa para este estudante");
         }
+        byte[] studentPhotoBytes = solicitation.getStudentPhoto();
 
         StudentCard newCard = StudentCard.builder()
                 .solicitation(solicitation)
@@ -71,9 +72,8 @@ public class StudentCardService {
                 .validity(LocalDate.of(today.getYear() + 1, 3, 31)) // validade até 31/03 do próximo ano
                 .emissionDateTime(LocalDateTime.now())
                 .isCurrentCard(true)
+                .studentPhoto(studentPhotoBytes)
                 .validityToken(UUID.randomUUID().toString())
-                .studentPhoto(solicitation.getStudentPhoto())
-
                 .build();
 
         StudentCard saved = studentCardRepository.save(newCard);
@@ -83,6 +83,12 @@ public class StudentCardService {
                 solicitation.getId()
         );
 
+
+// Atualiza status da solicitação para EMITIDA apenas se for diferente
+        Short statusIssuedCode = (short) SolicitationStatus.ISSUED.getCode();
+        if (solicitation.getStatus().getCode() != statusIssuedCode) {
+            solicitationService.updateStatus(statusIssuedCode, solicitation.getId());
+        }
         return StudentCardMapper.toDTO(saved);
     }
     public StudentCard getStudentCardById(Long id) {

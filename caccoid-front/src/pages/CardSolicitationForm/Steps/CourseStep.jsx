@@ -18,7 +18,7 @@ export const CourseStep = () => {
 
   const courses = [
     { value: '', label: 'Selecione o curso' },
-    { value: 'BCC', label: 'Bacharelado em Ciência da Computação' },
+    { value: 'BCC', label: 'Ciência da Computação' },
   ];
 
   const fields = {

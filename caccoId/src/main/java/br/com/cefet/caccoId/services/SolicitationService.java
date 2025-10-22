@@ -65,7 +65,8 @@ public class SolicitationService {
                 "status", solicitation.getStatus().getStatus(),
                 "photo", "data:" + mimeType + ";base64," + base64,
                 "rejected", solicitation.getRejected(),
-                "pendingEdit", solicitation.getPendingEdit());
+                "pendingEdit", solicitation.getPendingEdit(),
+                "studentId", solicitation.getStudent().getId());
     }
 
 
@@ -86,14 +87,10 @@ public class SolicitationService {
         }
         SolicitationStatus updatedStatus = statuses[newStatus];
 
-        if (solicitation.getStatus().equals(updatedStatus)) {
-            throw new IllegalArgumentException("O estado passado como parâmetro é o estado atual.");
-        }
 
         if(!(this.finalStatusReached(solicitation.getStatus()))){
             solicitation.setStatus(updatedStatus);
             solicitationRepository.save(solicitation);
-            log.info("Status da solicitação ID {} atualizado com sucesso para '{}'.", solicitation.getId(), updatedStatus.getStatus());
         }
         return solicitation;
     }
@@ -115,7 +112,7 @@ public class SolicitationService {
     }
 
     public boolean finalStatusReached(SolicitationStatus solicitationStatus){
-        return solicitationStatus == SolicitationStatus.AUTHORIZED;
+        return solicitationStatus == SolicitationStatus.ISSUED;
     }
 
     @Transactional

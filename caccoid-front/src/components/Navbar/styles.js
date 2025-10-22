@@ -44,6 +44,10 @@ export const NavbarTitle = styled.span`
   font-family: var(--font-title);
   font-size: 3rem;
   letter-spacing: 1px;
+
+  @media (max-width: 600px) {
+    font-size: 2rem;
+  }
 `;
 
 export const NavLinks = styled.div`
@@ -63,6 +67,12 @@ export const UserIcon = styled.img`
   margin-right: 0.6rem;
   background-color: white;
   object-fit: cover;
+
+  @media (max-width: 600px) {
+    height: 2em;
+    width: 2em;
+    margin-right: 0.4rem;
+  }
 `;
 
 export const DropdownIcon = styled.img`
@@ -74,6 +84,11 @@ export const UserName = styled.span`
   font-weight: 700;
   font-size: 1.25rem;
   margin-right: 1rem;
+
+  @media (max-width: 600px) {
+    font-size: 1rem;
+    margin-right: 0.6rem;
+  }
 `;
 
 export const NavbarLink = styled(Link)`
