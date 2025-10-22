@@ -9,6 +9,10 @@ public class StudentCardMapper {
 
     public static StudentCardDTO toDTO(StudentCard studentCard) {
         if (studentCard == null) return null;
+        var student = studentCard.getSolicitation() != null
+                ? studentCard.getSolicitation().getStudent()
+                : null;
+
 
         return StudentCardDTO.builder()
                 .id(studentCard.getId())
@@ -22,18 +26,11 @@ public class StudentCardMapper {
                 .emissionDateTime(studentCard.getEmissionDateTime())
                 .validityToken(studentCard.getValidityToken())
                 .isCurrentCard(studentCard.isCurrentCard())
-<<<<<<< HEAD
-                .solicitationId(studentCard.getSolicitation() != null
-                        ? studentCard.getSolicitation().getId()
-                        : null)
-                .studentPhotoBase64(Base64.getEncoder().encodeToString(studentCard.getStudentPhoto()))
-=======
-                .studentId(studentCard.getStudent() != null ? studentCard.getStudent().getId() : null)
+                .studentId(student != null ? student.getId() : null)
                 .studentPhotoBase64(studentCard.getStudentPhoto() != null ?
                         Base64.getEncoder().encodeToString(studentCard.getStudentPhoto()) : null)
-                .cpf(studentCard.getStudent() != null ? studentCard.getStudent().getCpf() : null)
-                .rg(studentCard.getStudent() != null ? studentCard.getStudent().getRg() : null)
->>>>>>> origin/develop
+                .cpf(student != null ? student.getCpf() : null)
+                .rg(student != null ? student.getRg() : null)
                 .build();
     }
 

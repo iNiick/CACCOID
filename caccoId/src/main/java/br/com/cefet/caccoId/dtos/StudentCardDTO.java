@@ -28,6 +28,7 @@ public class StudentCardDTO {
     private String validityToken;
     private boolean isCurrentCard;
     private Long solicitationId;
+    private Long studentId;
     private String studentPhotoBase64;
     private String cpf;
     private String rg;
