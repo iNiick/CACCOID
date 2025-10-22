@@ -1,9 +1,8 @@
 package br.com.cefet.caccoId.mappers;
 
 import br.com.cefet.caccoId.dtos.StudentCardDTO;
-import br.com.cefet.caccoId.models.Student;
+import br.com.cefet.caccoId.models.Solicitation;
 import br.com.cefet.caccoId.models.StudentCard;
-
 import java.util.Base64;
 
 public class StudentCardMapper {
@@ -23,9 +22,10 @@ public class StudentCardMapper {
                 .emissionDateTime(studentCard.getEmissionDateTime())
                 .validityToken(studentCard.getValidityToken())
                 .isCurrentCard(studentCard.isCurrentCard())
-                .studentId(studentCard.getStudent() != null ? studentCard.getStudent().getId() : null)
-                .studentPhotoBase64(studentCard.getStudentPhoto() != null ?
-                        Base64.getEncoder().encodeToString(studentCard.getStudentPhoto()) : null)
+                .solicitationId(studentCard.getSolicitation() != null
+                        ? studentCard.getSolicitation().getId()
+                        : null)
+                .studentPhotoBase64(Base64.getEncoder().encodeToString(studentCard.getStudentPhoto()))
                 .build();
     }
 
@@ -43,18 +43,11 @@ public class StudentCardMapper {
                 .validity(dto.getValidity())
                 .emissionDateTime(dto.getEmissionDateTime())
                 .validityToken(dto.getValidityToken())
-                .isCurrentCard(dto.isCurrentCard());
+                .isCurrentCard(dto.isCurrentCard())
+                .studentPhoto(Base64.getDecoder().decode(dto.getStudentPhotoBase64()));
 
-        // Se vier foto em base64, converte pra byte[]
-        if (dto.getStudentPhotoBase64() != null) {
-            builder.studentPhoto(Base64.getDecoder().decode(dto.getStudentPhotoBase64()));
-        }
-
-        // Associa o estudante apenas pelo ID (não carrega do banco aqui)
-        if (dto.getStudentId() != null) {
-            Student student = new Student();
-            student.setId(dto.getStudentId());
-            builder.student(student);
+        if (dto.getSolicitationId() != null) {
+            builder.solicitation(Solicitation.builder().id(dto.getSolicitationId()).build());
         }
 
         return builder.build();

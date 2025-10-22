@@ -4,6 +4,7 @@ import br.com.cefet.caccoId.dtos.StudentCardDTO;
 import br.com.cefet.caccoId.mappers.StudentCardMapper;
 import br.com.cefet.caccoId.models.Student;
 import br.com.cefet.caccoId.models.StudentCard;
+import br.com.cefet.caccoId.models.Solicitation;
 import br.com.cefet.caccoId.repositories.StudentCardRepository;
 import br.com.cefet.caccoId.repositories.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,7 +26,6 @@ public class StudentCardService {
     private StudentCardRepository studentCardRepository;
     @Autowired
     private SolicitationRepository solicitationRepository;
-
     @Autowired
     private StudentRepository studentRepository;
 
@@ -35,62 +35,54 @@ public class StudentCardService {
         return StudentCardMapper.toDTO(card);
     }
 
-    public StudentCardDTO createStudentCard(Long studentId) {
-        // Busca estudante
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new EntityNotFoundException("Estudante não encontrado"));
+    public StudentCardDTO createStudentCard(Long solicitationId) {
+        Solicitation solicitation = solicitationRepository.findById(solicitationId)
+                .orElseThrow(() -> new EntityNotFoundException("Solicitação não encontrada"));
+
+        Student student = solicitation.getStudent();
+        if (student == null) {
+            throw new EntityNotFoundException("Solicitação não está associada a um estudante");
+        }
 
         LocalDate today = LocalDate.now();
 
-        // Busca todas as carteirinhas do estudante
-        List<StudentCard> cards = studentCardRepository.findAllByStudentId(studentId);
+        List<StudentCard> cards = studentCardRepository.findAllBySolicitation_Student_Id(student.getId());
 
-        // Desativa carteirinhas expiradas -- CONFERIR O ENUM SolicitationStatus
-
-        Short statusCode = (short) SolicitationStatus.fromString("AUTORIZADA").getCode();
-        SolicitationStatus status = SolicitationStatus.fromCode(statusCode);
-        boolean exists = solicitationRepository.existsByStudentIdAndStatus(studentId, status); // por exemplo, status 2
-        boolean hasActive = false;
-        if (exists) {
-            statusCode = 1;
-        }
         for (StudentCard c : cards) {
             if (c.isCurrentCard() && c.getValidity().isBefore(today)) {
                 c.setCurrentCard(false);
                 studentCardRepository.save(c);
-                solicitationService.updateStatus(statusCode, studentId);
-                // Status "Autorizada"
-
-            }
-            if (c.isCurrentCard()) {
-                hasActive = true;
             }
         }
 
-        // Impede criação se já existir carteirinha ativa
+        boolean hasActive = cards.stream().anyMatch(StudentCard::isCurrentCard);
         if (hasActive) {
             throw new IllegalStateException("Já existe uma carteirinha ativa para este estudante");
         }
 
-        // Cria nova carteirinha
         StudentCard newCard = StudentCard.builder()
-                .student(student)
+                .solicitation(solicitation)
                 .name(student.getName())
                 .institution(student.getInstitution())
                 .program(student.getProgram())
                 .enrollmentNumber(student.getEnrollmentNumber())
                 .dateOfBirth(student.getDateOfBirth())
                 .educationLevel(student.getEducationLevel())
-                // Validade sempre 31/03 do ano seguinte
-                .validity(LocalDate.of(today.getYear() + 1, 3, 31))
+                .validity(LocalDate.of(today.getYear() + 1, 3, 31)) // validade até 31/03 do próximo ano
                 .emissionDateTime(LocalDateTime.now())
                 .isCurrentCard(true)
-                .validityToken(UUID.randomUUID().toString()) // placeholder
+                .validityToken(UUID.randomUUID().toString())
+                .studentPhoto(solicitation.getStudentPhoto())
+
                 .build();
 
         StudentCard saved = studentCardRepository.save(newCard);
-        statusCode = (short) 3; // Status "EMITIDA"
-        solicitationService.updateStatus(statusCode,studentId);
+
+        solicitationService.updateStatus(
+                (short) SolicitationStatus.ISSUED.getCode(),
+                solicitation.getId()
+        );
+
         return StudentCardMapper.toDTO(saved);
     }
     public StudentCard getStudentCardById(Long id) {

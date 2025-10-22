@@ -27,6 +27,6 @@ public class StudentCardDTO {
     private LocalDateTime emissionDateTime;
     private String validityToken;
     private boolean isCurrentCard;
-    private Long studentId;
+    private Long solicitationId;
     private String studentPhotoBase64;
 }

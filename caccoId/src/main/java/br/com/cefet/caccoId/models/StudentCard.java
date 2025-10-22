@@ -2,10 +2,8 @@ package br.com.cefet.caccoId.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 import java.time.LocalDate;
-
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "student_card")
@@ -14,8 +12,8 @@ import java.time.LocalDate;
 @Builder
 @Data
 @EqualsAndHashCode(of = "id")
+public class StudentCard {
 
-public class StudentCard{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,10 +27,10 @@ public class StudentCard{
     @Column(nullable = false)
     private String program;
 
-   @Column(nullable = false)
+    @Column(nullable = false)
     private String enrollmentNumber;
 
-   @Column(nullable = false)
+    @Column(nullable = false)
     private LocalDate dateOfBirth;
 
     @Column(nullable = false)
@@ -40,7 +38,7 @@ public class StudentCard{
 
     @Column(nullable = false)
     private LocalDate validity;
-    
+
     @Column(nullable = false)
     private LocalDateTime emissionDateTime;
 
@@ -54,9 +52,9 @@ public class StudentCard{
     @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] studentPhoto;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
+    @OneToOne
+    @JoinColumn(name = "solicitation_id", nullable = false, unique = true)
+    private Solicitation solicitation;
 
     @PrePersist
     public void prePersist() {
