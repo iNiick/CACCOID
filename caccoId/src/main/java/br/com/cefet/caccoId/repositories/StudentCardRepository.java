@@ -13,18 +13,17 @@ import java.util.Optional;
 
 public interface StudentCardRepository extends JpaRepository<StudentCard, Long> {
 
-    Optional<StudentCard> findByStudentId(@Param("studentId") Long studentId);
+    Optional<StudentCard> findBySolicitationId(@Param("solicitationId") Long solicitationId);
 
-    List<StudentCard> findAllByStudentId(Long studentId); // <<< adicionado
+    List<StudentCard> findAllBySolicitation_Student_Id(Long studentId);
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM StudentCard sc WHERE sc.student.id IN :studentIds")
+    @Query("DELETE FROM StudentCard sc WHERE sc.solicitation.student.id IN :studentIds")
     void deleteByStudentIds(@Param("studentIds") List<Long> studentIds);
 
-    @Query("SELECT sc.student.id FROM StudentCard sc WHERE sc.validity < :currentDateTime")
+    @Query("SELECT sc.solicitation.student.id FROM StudentCard sc WHERE sc.validity < :currentDateTime")
     List<Long> findStudentIdsWithExpiredCards(@Param("currentDateTime") LocalDateTime currentDateTime);
 
     Optional<StudentCard> findByValidityToken(String validityToken);
 }
-

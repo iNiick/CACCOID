@@ -75,9 +75,9 @@ public class StudentCardController {
         }
     }
 
-    @PostMapping("/create/{studentId}")
+    @PostMapping("/create/{solicitationId}")
     @Operation(
-            summary = "Recebe o id do aluno e cria a carteirinha estudantil",
+            summary = "Recebe o id da solicitação e cria a carteirinha estudantil",
             description = "Cria a carteirinha estudantil de um aluno.")
     @ApiResponses(value = {
             @ApiResponse(
@@ -97,9 +97,9 @@ public class StudentCardController {
                     description = "Erro interno ao retornar dados da solicitação"
             )
     })
-    public ResponseEntity<ApiResponseDTO<StudentCardDTO>> createCard(@PathVariable Long studentId) {
+    public ResponseEntity<ApiResponseDTO<StudentCardDTO>> createCard(@PathVariable Long solicitationId) {
         try {
-            StudentCardDTO createdCard = studentCardService.createStudentCard(studentId);
+            StudentCardDTO createdCard = studentCardService.createStudentCard(solicitationId);
 
             return ResponseEntity.ok(new ApiResponseDTO<StudentCardDTO>(true, "Carteirinha obtida com sucesso", createdCard));
         } catch (EntityNotFoundException ex) {
@@ -111,7 +111,7 @@ public class StudentCardController {
         }
     }
 
-    @GetMapping("/get-card-by-id/{studentId}")
+    @GetMapping("/get-card-by-id/{solicitationId}")
     @Operation(
             summary = "Obter carteirinha estudantil por id",
             description = "Obtém a carteirinha estudantil de um aluno pelo ID.")
@@ -134,11 +134,11 @@ public class StudentCardController {
             )
     })
 
-    public ResponseEntity<ApiResponseDTO<?>> getStudentCardByStudentId(
+    public ResponseEntity<ApiResponseDTO<?>> getStudentCardBySolicitationId(
             @Parameter(description = "Retorna os dados da carteirinha ao receber ID", required = true)
-            @PathVariable Long studentId) {
+            @PathVariable Long solicitationId) {
         try {
-            var studentCardData = studentCardService.getStudentCardByStudentId(studentId);
+            var studentCardData = studentCardService.getStudentCardBySolicitationId(solicitationId);
             return ResponseEntity.ok(new ApiResponseDTO<>(true, "Carteirinha obtida com sucesso", studentCardData));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
