@@ -17,7 +17,7 @@ export const useStudentCard = (cardId) => {
       try {
         let response;
         try {
-          response = await api.get(`/student-card/${cardId}`);
+          response = await api.get(`/student-card/get-card-by-hash/${cardId}`);
         } catch {
           response = await api.get(`/student-card/get-card-by-id/${cardId}`);
         }
